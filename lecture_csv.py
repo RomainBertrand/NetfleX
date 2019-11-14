@@ -11,11 +11,13 @@ import csv
 #
 # Ouverture du fichier source.
 #
-def init_data()->(dict, dict):
+
+def init_data(avec_notes=False)->(dict, dict):
     """
         Construction des deux dictionnaires de base:
             Celui qui à un film associe les utilisateurs l'ayant vu et leur note
             Celui qui à un utilisateur associe les films qu'il a vu et leur note
+        Passer l'argument avec_note = True pour obtenir les notes et non les avis
     """
     nom_fichier = "ml-latest-small/ratings.csv"
     with open(nom_fichier, newline='') as fichier_notes:
@@ -31,9 +33,10 @@ def init_data()->(dict, dict):
 
                 id_film = row[1]
                 id_utilisateur = row[0]
-                note = row[2]
+                avis = float(row[2])
 
-                avis = bool(float(note) > 3)
+                if not avec_notes:
+                    avis = bool(avis > 3)
 
                 if str(id_film) not in dico_films_avis.keys():
                     dico_films_avis[str(id_film)] = (id_utilisateur, avis)
