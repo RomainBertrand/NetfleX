@@ -9,7 +9,7 @@ Created on Sun Nov 10 17:04:37 2019
 import lecture_csv
 
 
-def meilleure_correlation(utilisateur) -> int:
+def meilleure_correlation(utilisateur, avec_notes=False) -> int:
     """
     Renvoie l'indice d'un film qui est censé plaire à l'utilisateur, au vu de ses goûts.
     0 si aucun film n'a été trouvé
@@ -36,10 +36,13 @@ def meilleure_correlation(utilisateur) -> int:
     for i in range(len(liste_films)):  # pour chaque film
         # pour chaque utilisateur qui l'a vu
         for j in range(int(len(utilisateurs_avis[i])/2)):
-            if utilisateur[i][1] == utilisateurs_avis[i][2*j+1]:  # si ils ont le même avis
-                score_correlation[j] += 1
+            if avec_notes:
+                score_correlation[j] += utilisateur[i][1]*utilisateurs_avis[i][2*j+1]
             else:
-                score_correlation[j] -= 1
+                if utilisateur[i][1] == utilisateurs_avis[i][2*j+1]:  # si ils ont le même avis
+                    score_correlation[j] += 1
+                else:
+                    score_correlation[j] -= 1
     # l'utilisateur avec la meilleure corrélation
     user_opti = utilisateurs_lies[score_correlation.index(
         max(score_correlation))]
