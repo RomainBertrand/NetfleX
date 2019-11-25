@@ -15,8 +15,8 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
     0 si aucun film n'a été trouvé
     Pour cela on utlise simplement l'avis booléen des autres utilisateurs
     """
-    dico_films_avis, dico_utilisateurs_avis = lecture_csv.init_data(
-    )  # on intitialise les dictionnaires
+    #on initialise les dictionnaires
+    dico_films_avis, dico_utilisateurs_avis = lecture_csv.init_data(avec_notes)
     liste_films = []
     # on génère la liste des films vus par notre utilisateur
     for film_avis in utilisateur:
