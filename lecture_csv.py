@@ -67,7 +67,7 @@ def init_data(avec_notes=False)->(dict, dict, dict, int):
     return dico_films_avis, dico_utilisateur_avis, dico_nombre_vues, nombre_vues_tot
 
 
-def init_noms_films():
+def init_noms_films()->dict:
     """
         Initialisation du dico id_films / noms_films
     """
