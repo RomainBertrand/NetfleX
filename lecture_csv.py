@@ -65,3 +65,29 @@ def init_data(avec_notes=False)->(dict, dict, dict, int):
 
     fichier_notes.close()
     return dico_films_avis, dico_utilisateur_avis, dico_nombre_vues, nombre_vues_tot
+
+
+def init_noms_films():
+    """
+        Initialisation du dico id_films / noms_films
+    """
+    nom_fichier = "ml-latest-small/movies.csv"
+    with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
+
+        dico_noms_films = {}
+
+        reader = csv.reader(fichier_noms)
+
+        premiere_ligne = True
+        for row in reader:
+
+            if not premiere_ligne:
+
+                id_film = row[0]
+                nom_film = row[1]
+
+                dico_noms_films[str(id_film)] = nom_film
+            premiere_ligne = False
+
+    fichier_noms.close()
+    return dico_noms_films
