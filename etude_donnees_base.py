@@ -7,7 +7,7 @@ Created on Sun Nov 10 17:04:37 2019
 
 # Objectif: renvoyer un film corrélé au choix de l'utilisateur
 import lecture_csv
-
+import math
 
 def meilleure_correlation(utilisateur, avec_notes=False) -> int:
     """
@@ -16,7 +16,7 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
     Pour cela on utlise simplement l'avis booléen des autres utilisateurs
     """
     #on initialise les dictionnaires
-    dico_films_avis, dico_utilisateurs_avis = lecture_csv.init_data(avec_notes)
+    dico_films_avis, dico_utilisateurs_avis ,dico_nombre_vues, nombres_vues_tot = lecture_csv.init_data(avec_notes)
     liste_films = []
     # on génère la liste des films vus par notre utilisateur
     for film_avis in utilisateur:
@@ -37,7 +37,8 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
         # pour chaque utilisateur qui l'a vu
         for j in range(int(len(utilisateurs_avis[i])/2)):
             if avec_notes:
-                score_correlation[j] += utilisateur[i][1]*utilisateurs_avis[i][2*j+1]
+                ecart=abs(utilisateur[i][1]-utilisateurs_avis[i][2*j+1])
+                score_correlation[j] += (5-ecart)*(1+math.log(nombres_vues_tot/dico_nombre_vues[i]))
             else:
                 if utilisateur[i][1] == utilisateurs_avis[i][2*j+1]:  # si ils ont le même avis
                     score_correlation[j] += 1
