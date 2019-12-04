@@ -12,7 +12,7 @@ import csv
 # Ouverture du fichier source.
 #
 
-def init_data(avec_notes=False)->(dict, dict, dict, int):
+def init_data(avec_notes: bool = False)->(dict, dict, dict, int):
     """
         Construction des deux dictionnaires de base:
             Celui qui à un film associe les utilisateurs l'ayant vu et leur note
@@ -21,14 +21,15 @@ def init_data(avec_notes=False)->(dict, dict, dict, int):
 
         Compte également le nombre de vues total et le nombre de vues par film
     """
+
+    dico_films_avis = {}
+    dico_utilisateur_avis = {}
+
+    nombre_vues_tot = 0
+    dico_nombre_vues = {}
+
     nom_fichier = "ml-latest-small/ratings.csv"
     with open(nom_fichier, newline='') as fichier_notes:
-
-        dico_films_avis = {}
-        dico_utilisateur_avis = {}
-
-        nombre_vues_tot = 0
-        dico_nombre_vues = {}
 
         reader = csv.reader(fichier_notes)
 
@@ -67,14 +68,17 @@ def init_data(avec_notes=False)->(dict, dict, dict, int):
     return dico_films_avis, dico_utilisateur_avis, dico_nombre_vues, nombre_vues_tot
 
 
-def init_noms_films()->dict:
+def init_noms_films()->(dict, dict):
     """
         Initialisation du dico id_films / noms_films
     """
+
+    dico_noms_films = {}
+    dico_films_noms = {}
+
     nom_fichier = "ml-latest-small/movies.csv"
     with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
 
-        dico_noms_films = {}
 
         reader = csv.reader(fichier_noms)
 
@@ -87,7 +91,8 @@ def init_noms_films()->dict:
                 nom_film = row[1]
 
                 dico_noms_films[str(id_film)] = nom_film
+                dico_films_noms[nom_film] = str(id_film)
             premiere_ligne = False
 
     fichier_noms.close()
-    return dico_noms_films
+    return dico_noms_films, dico_films_noms
