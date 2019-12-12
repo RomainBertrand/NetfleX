@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>test</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="{{ STATIC_URL }}">
+</head>
+
+<body>
+	<label for="choix_films">Indiquez votre film préféré :</label>
+	<input list="Films" name="nomFilm" type="text" id="choix_films">
+	<datalist id="Films">	
+		{% for filmTitle in liste_movies %}
+			<option value="{{ filmTitle }}">
+		{% endfor %}
+	</datalist>
+	<form method="post">
+		Note :<br>
+		<input type="radio" name="note" value="0" style="vertical-align: middle">0<br>
+		<input type="radio" name="note" value="1" style="vertical-align: middle">1<br>
+		<input type="radio" name="note" value="2" style="vertical-align: middle">2<br>
+		<input type="radio" name="note" value="3" style="vertical-align: middle">3<br>
+		<input type="radio" name="note" value="4" style="vertical-align: middle">4<br>
+		<input type="radio" name="note" value="5" style="vertical-align: middle">5<br>
+		<input type="radio" name="note" value="-1" style="vertical-align: middle">Je ne l'ai pas vu<br>
+		<input type="submit" value="Submit">
+	</form>
+	<div id="radioGroup">
+  <div class="wrap">
+    <label for="markStudent">Mark User as Student</label>
+    <input type="radio" name="mark" id="markStudent" value="Student" />
+  </div>
+
+  <div class="wrap">
+    <label for="markAdmin">Mark User as Admin</label>
+    <input type="radio" name="mark" id="markAdmin" value="Admin" />
+  </div>
+  <div class="wrap">
+    <label for="markService">Mark User as Service</label>
+    <input type="radio" name="mark" id="markService" value="Service" />
+  </div>
+  <div class="wrap">
+    <label for="markNull">Mark User as Null</label>
+    <input type="radio" name="mark" id="markNull" value="Null" />
+  </div>
+</div>	
+</body>
+</html>
