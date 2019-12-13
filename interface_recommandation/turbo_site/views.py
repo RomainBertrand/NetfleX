@@ -14,13 +14,20 @@ def nouvelle_page(request):
     liste_movies = curseur.fetchall()
     i=0
     for movie in liste_movies:
-        liste_movies[i]=str(movie[0])
-        i+=1
-    return render(request, "turbo_site/nouvelle_page.html", locals())
-
-def recuperation_avis(request):
+        liste_movies[i] = str(movie[0])
+        i += 1
     form = NotationFilms(request.POST or None)
     if form.is_valid() :
-        titreFilm = form.cleaned_data['titreFilm']
+        nomFilm = form.cleaned_data['nomFilm']
         note = form.cleaned_data['note']
+        envoi = True
+    return render(request, "turbo_site/nouvelle_page.html", locals())
+
+def premiere_note(request):
+    if request.method == 'POST':
+        note = NotationFilms(request.POST)
+        if note.is_valid():
+            return render(request, "turbo_site/premiere_note.html", locals())
+    else :
+        note = NotationFilms() 
     return render(request, "turbo_site/nouvelle_page.html", locals())
