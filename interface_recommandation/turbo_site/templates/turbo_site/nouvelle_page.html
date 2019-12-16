@@ -23,14 +23,17 @@ p {
 </style>
 
 <body style="background-color: #2C2D2D">
-	<label for="choix_films" align="center">Indiquez votre film préféré :</label>
-	<input list="Films" name="nomFilm" type="text" id="choix_films" align="center" size="50">
-	<datalist id="Films">	
-		{% for filmTitle in liste_movies %}
-			<option value="{{ filmTitle }}">
-		{% endfor %}
-	</datalist>
-	<form action="/turbo_site/premiere_note/" method="post">{% csrf_token %}
+
+	<form action="/turbo_site/premiere_note/" name="note" method="post">{% csrf_token %}
+		
+		<label for="choix_films" align="center">Indiquez votre film préféré :</label>
+		<input list="Films" name="nomFilm" type="text" id="choix_films" align="center" size="50">
+		<datalist id="Films">	
+			{% for filmTitle in liste_movies %}
+				<option value="{{ filmTitle }}">
+			{% endfor %}
+		</datalist>
+		
 		<p>Note :</p>
 		<div id="radioGroup" align="center">
 		<div class="wrap">

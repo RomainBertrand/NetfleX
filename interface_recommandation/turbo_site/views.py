@@ -24,10 +24,11 @@ def nouvelle_page(request):
     return render(request, "turbo_site/nouvelle_page.html", locals())
 
 def premiere_note(request):
-    if request.method == 'POST':
-        note = NotationFilms(request.POST)
-        if note.is_valid():
+    if request.method=="POST":
+        notation = NotationFilms(request.POST)
+        #print(notation.__dict__)
+        if notation.is_valid:
             return render(request, "turbo_site/premiere_note.html", locals())
     else :
-        note = NotationFilms() 
+        notation = NotationFilms() 
     return render(request, "turbo_site/nouvelle_page.html", locals())
