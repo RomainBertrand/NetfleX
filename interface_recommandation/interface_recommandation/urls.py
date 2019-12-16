@@ -18,5 +18,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('turbo_site/', include('turbo_site.urls')),
+    path('NetfleX/', include('NetfleX.urls')),
 ]

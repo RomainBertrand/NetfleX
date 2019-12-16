@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'turbo_site',
+    'NetfleX',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,7 +117,4 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_ROOT = ''
-STATIC_URL = '/css/'
-STATICFILES_DIR = ("../turbo_site/templates/turbo_site/css")
+STATIC_URL = '/static/'
