@@ -1,4 +1,4 @@
-<!doctype html>
+<doctype html>
 
 <html lang="en">
 <head>
@@ -24,13 +24,13 @@ p {
 
 <body style="background-color: #2C2D2D">
 	<label for="choix_films" align="center">Indiquez votre film préféré :</label>
-	<input list="Films" name="nomFilm" type="text" id="choix_films" align="center">
+	<input list="Films" name="nomFilm" type="text" id="choix_films" align="center" size="50">
 	<datalist id="Films">	
 		{% for filmTitle in liste_movies %}
 			<option value="{{ filmTitle }}">
 		{% endfor %}
 	</datalist>
-	<form action="/turbo_site/premiere_note/" method="post">
+	<form action="/turbo_site/premiere_note/" method="post">{% csrf_token %}
 		<p>Note :</p>
 		<div id="radioGroup" align="center">
 		<div class="wrap">
