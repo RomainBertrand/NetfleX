@@ -8,7 +8,7 @@ def home(request):
     return HttpResponse("<h2>Hello World</h2>")
 
 def block_avis(request):
-    lien = sqlite3.connect("../base_noms_film.db")
+    lien = sqlite3.connect("base_noms_film.db")
     curseur = lien.cursor()
     curseur.execute("SELECT DISTINCT title FROM noms_film")
     liste_movies = curseur.fetchall()
@@ -16,6 +16,10 @@ def block_avis(request):
     for movie in liste_movies:
         liste_movies[i] = str(movie[0])
         i += 1
+        
+    #Test
+    liste_choix = range(5)
+        
     form = NotationFilms(request.POST or None)
     if form.is_valid() :
         nomFilm = form.cleaned_data['nomFilm']
