@@ -1,0 +1,56 @@
+  body {
+    background: #333333;
+    color: #fafafa;
+    margin-top: 5rem;
+  }
+  
+
+  h1 {
+	color: #00FF00;
+  }
+
+  h2, h3, h4, h5, h6 {
+    color: #fafafa;
+  }
+  
+  ul {
+    margin: 0;
+  }
+
+  p {
+	color: black;
+	background-color: white;
+	text-align: center;
+  }
+  
+  .bg-steel {
+    background-color: #5f788a;
+  }
+  
+  .site-header .navbar-nav .nav-link {
+    color: #cbd5db;
+  }
+  
+  .site-header .navbar-nav .nav-link:hover {
+    color: #ffffff;
+  }
+  
+  .site-header .navbar-nav .nav-link.active {
+    font-weight: 500;
+  }
+
+  #radioGroup .wrap {
+    display: inline-block;
+  }
+  #radioGroup label {
+    display: block;
+    text-align: center;
+    margin: 0 0.2em;
+  }
+  #radioGroup input[type="radio"] {
+    display: block;
+    margin: 0.5em auto;
+  }
+  .buttonHolder{ text-align: center; }
+
+  

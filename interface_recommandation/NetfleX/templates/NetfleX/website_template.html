@@ -1,3 +1,7 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'NetfleX/style.css' %}">
+
 <doctype html>
 
 <html lang="en">
@@ -8,9 +12,9 @@
 
 </head>
 
-<style>
+<!--  <style>
 body {
-	color: white;
+	color: white; 
 }
 h1 {
 	color: #00FF00;
@@ -20,15 +24,16 @@ p {
 	background-color: white;
 	text-align: center;
 }
-</style>
+</style> -->
 
-<body style="background-color: #2C2D2D">
+<!-- <body style="background-color: #2C2D2D"> -->
+<body>
 	{% block content %}
 	{% endblock %}
 </body>
 </html>
 
-<style type="text/css">
+<!-- <style type="text/css">
 	#radioGroup .wrap {
 		display: inline-block;
 	}
@@ -42,4 +47,4 @@ p {
 		margin: 0.5em auto;
 	}
 	.buttonHolder{ text-align: center; }
-</style>
+</style> --> 
