@@ -1,7 +1,14 @@
 {% extends "NetfleX/website_template.html" %}
 
 {% block content %}
-	<p1>Vous avez choisi le film :	{{ notation.afficheTitre }}<br>
-	Vous lui avez donné la note : {{ notation.afficheNote }}<br>
-	Merci!</p1>
+	{% for film in films_choisis %}
+	<p1>Vous avez choisi le film :	{{ film.0  }}<br>
+	Vous lui avez donné la note : {{ film.1 }}<br>
+	</p1>
+	{% endfor %}
+	id du film : {{ liste_movieId }}<br>
+        couple id et note : {{ utilisateur }}<br>
+	film recommandé : {{ film_recommande }} <br>
+	titre : {{ titre_recommande }} <br>
+	<p1> Merci! </p1>
 {% endblock %}

@@ -1,9 +1,7 @@
 from django import forms
 
+import sqlite3
+
 class NotationFilms(forms.Form):
-    titre = forms.CharField()
-    note = forms.IntegerField()
-    def afficheNote(self):
-        return int(self.data.get('note'))
-    def afficheTitre(self):
-        return str(self.data.get('nomFilm'))
+    titre = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'list':'Films', 'class':'form_film'}))
+    note = forms.IntegerField(max_value=5, min_value=0)

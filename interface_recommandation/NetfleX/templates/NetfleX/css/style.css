@@ -10,3 +10,14 @@
   display: block;
   margin: 0.5em auto;
 }
+
+.form_film {
+	color:white;
+	margin:20px;
+	padding:20px;
+	text-align:left;
+}
+.button_note {
+	color:white;
+	align:right;
+}

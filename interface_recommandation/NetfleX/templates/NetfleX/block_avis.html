@@ -1,53 +1,17 @@
 {% extends "NetfleX/website_template.html" %}
 
 {% block content %}
-	<form action="/NetfleX/page_finale/" name="note" method="post">{% csrf_token %}
-    		{% for choix in liste_choix %}
-    			<label for="choix_films" align="center">Indiquez votre film préféré :</label>
-    			<input list="Films" name="nomFilm" type="text" id="choix_films" align="center" size="50">
-    			<datalist id="Films">	
-    				{% for filmTitle in liste_movies %}
-    					<option value="{{ filmTitle }}">
-    				{% endfor %}
-    			</datalist>
-    			
-    			<p>Note :</p>
-    			<div id="radioGroup" align="center">
-    			<div class="wrap">
-    				<label for="note0">0</label>
-    				<input type="radio" name="note" value="0" id="note0">
-    			</div>
-    			<div class="wrap">
-    				<label for="note1">1</label>
-    				<input type="radio" name="note" value="1" id="note1">
-    			</div>
-    			<div class="wrap">
-    				<label for="note2">2</label>
-    				<input type="radio" name="note" value="2" id="note2" />
-    			</div>
-    			<div class="wrap">
-    				<label for="note3">3</label>
-    				<input type="radio" name="note" id="note3" value="3" >
-    			</div>
-    			<div class="wrap">
-    				<label for="note4">4</label>
-    				<input type="radio" name="note" id="note4" value="4" >
-    			</div>
-    			<div class="wrap">
-    				<label for="note5">5</label>
-    				<input type="radio" name="note" id="note5" value="5" >
-    			</div>
-    			<!-- Pour une partie aléatoire future 
-    			<div class="wrap">
-    					<label for="note_1">Je n'ai pas vu le film</label>
-    					<input type="radio" name="note" id="note_1" value="-1" >
-    			</div>
-    			-->
-    			</div>
-			{% endfor %}
-		<div class="buttonHolder">
-			<input type="submit" value="Submit">
-		</div>
+        <form action="/NetfleX/page_finale/"  method='POST' class='form_film'>
+	{{ formset.management_form }}
+		{% csrf_token %}
+		{% for film_form in formset %}
+			{{ film_form.as_p }}
+			<datalist id="Films">
+				{% for filmTitle in liste_movies %}
+					<option value="{{ filmTitle }}">
+				{% endfor %}
+                        </datalist>
+		{% endfor %}
+		<input type="submit" value="J'ai choisi ces films !" class="button"/>
 	</form>
-
 {% endblock %}
