@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'NetfleX/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'NetfleX/style_global.css' %}">
 
 <doctype html>
 
@@ -31,9 +31,9 @@ p {
 
 	<ul>
 		<li><a href="/NetfleX/">Home</a></li>
-		<li><a href="#news">News</a></li>
+		<li><a href="/NetfleX/block_avis/">Recommandation de films</a></li>
 		<li><a href="#contact">Contact</a></li>
-		<li style="float:right" > <a href="#about">About</a></li>
+		<li style="float:right" > <a href="#aide">Aide</a></li>
     </ul>
 	{% block content %}
 	{% endblock %}

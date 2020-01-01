@@ -1,7 +1,18 @@
 {% extends "NetfleX/website_template.html" %}
 
+<!--{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'NetfleX/formulaire.css' %}">-->
+
 {% block content %}
-        <form action="/NetfleX/page_finale/"  method='POST' class='form_film'>
+
+	<p class="Presentation"> 
+		Vous pouvez ici choisir 5 films, ainsi que les notes que vous leur attribuez pour que nous puissions vous recommander un nouveau film :
+		
+	</p>
+
+		<form action="/NetfleX/page_finale/"  method='POST' class='form_film'>
+
 	{{ formset.management_form }}
 		{% csrf_token %}
 		{% for film_form in formset %}
@@ -12,6 +23,6 @@
 				{% endfor %}
                         </datalist>
 		{% endfor %}
-		<input type="submit" value="J'ai choisi ces films !" class="button"/>
+		<input type="submit" value="Je valide mon choix de films !" class="button"/>
 	</form>
 {% endblock %}
