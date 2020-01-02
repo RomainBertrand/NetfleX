@@ -1,12 +1,28 @@
-body {
-    background: #e40909;
-    color: #fafafa;
-    /*margin-top: 5rem;*/;
+.button{
+    background-color : #faf5f5;
+    outline : none;
+    border-radius : 12px;
+    vertical-align : middle;
   }
 
 
-
-  li {
-      color: #e40909;
+  .form_film {
+    text-align: middle;
+    /*width: 800px;*/
   }
 
+  #id_form-0-titre, #id_form-1-titre, #id_form-2-titre, #id_form-3-titre, #id_form-4-titre {
+    padding: 2px;
+    border: 3px solid rgb(116, 113, 113);
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 350px;
+  }
+
+  #id_form-0-note, #id_form-1-note, #id_form-2-note, #id_form-3-note, #id_form-4-note{
+    padding: 2px;
+    border: 3px solid rgb(116, 113, 113);
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 80px;
+  }

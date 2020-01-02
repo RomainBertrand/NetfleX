@@ -98,12 +98,13 @@
     color: white;
     background-color: #333333;
     text-align: left;
+    margin-top: 40px;
   }
 
-
+/*
   .form_film {
     text-align: middle;
-    /*width: 800px;*/
+    width: 800px;
   }
 
   #id_form-0-titre, #id_form-1-titre, #id_form-2-titre, #id_form-3-titre, #id_form-4-titre {
@@ -120,4 +121,4 @@
     margin-top: 2px;
     margin-bottom: 2px;
     width: 80px;
-  }
+  }*/
