@@ -38,7 +38,7 @@ def manage_notations(request):
 
 def home(request):
     """ Page d'accueil """
-    return HttpResponse("<h2>Hello World</h2>")
+    return render(request, "NetfleX/page_accueil.html", locals())
 
 
 def page_finale(request):
@@ -73,3 +73,13 @@ def page_finale(request):
             titre_recommande = curseur.fetchall()[0][0]
             return render(request, "NetfleX/page_finale.html", locals())
     return render(request, "NetfleX/block_avis.html", locals())
+
+
+def contact(request):
+    """ Page Contact """
+    return render(request, "NetfleX/page_contact.html", locals())
+
+
+def sources(request):
+    """ Page Sources """
+    return render(request, "NetfleX/page_source.html", locals())
