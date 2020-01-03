@@ -6,8 +6,11 @@ Created on Sun Nov 10 17:04:37 2019
 """
 
 # Objectif: renvoyer un film corrélé au choix de l'utilisateur
-from NetfleX.lecture_csv import *
+
 import math
+import random
+from NetfleX.lecture_csv import *
+
 
 def meilleure_correlation(utilisateur, avec_notes=False) -> int:
     """
@@ -15,8 +18,9 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
     0 si aucun film n'a été trouvé
     Pour cela on utlise simplement l'avis booléen des autres utilisateurs
     """
-    #on initialise les dictionnaires
-    dico_films_avis, dico_utilisateurs_avis ,dico_nombre_vues, nombres_vues_tot = init_data(avec_notes)
+    # on initialise les dictionnaires
+    dico_films_avis, dico_utilisateurs_avis, dico_nombre_vues, nombres_vues_tot = init_data(
+        avec_notes)
     liste_films = []
     # on génère la liste des films vus par notre utilisateur
     for film_avis in utilisateur:
@@ -37,8 +41,9 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
         # pour chaque utilisateur qui l'a vu
         for j in range(int(len(utilisateurs_avis[i])/2)):
             if avec_notes:
-                ecart=abs(utilisateur[i][1]-utilisateurs_avis[i][2*j+1])
-                score_correlation[j] += (5-ecart)*(1+math.log(nombres_vues_tot/dico_nombre_vues[i]))
+                ecart = abs(utilisateur[i][1]-utilisateurs_avis[i][2*j+1])
+                score_correlation[j] += (5-ecart) * \
+                    (1+math.log(nombres_vues_tot/dico_nombre_vues[i]))
             else:
                 if utilisateur[i][1] == utilisateurs_avis[i][2*j+1]:  # si ils ont le même avis
                     score_correlation[j] += 1
@@ -49,11 +54,13 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
         max(score_correlation))]
     # films vus par l'utilisateur le plus corrélé
     film_possibles = dico_utilisateurs_avis[user_opti]
+    # liste des films ayant eu la note maximale chez l'utilisateur optimal
+    films_a_recommander = []
     # un indice sur deux est un film, l'autre est un avis
     for ind_film in range(int(len(film_possibles)/2)):
         # on vérifie que l'utilisateur optimal a aimé le film
         if film_possibles[2*ind_film+1]:
             if int(film_possibles[2*ind_film]) not in liste_films:
                 # au vu du nombre d'avis de chaque utilisateur (>30), on aura un film en commun
-                return int(film_possibles[2*ind_film])
-    return 0
+                films_a_recommander.append(int(film_possibles[2*ind_film]))
+    return films_a_recommander[random.randint(0,len(films_a_recommander))]
