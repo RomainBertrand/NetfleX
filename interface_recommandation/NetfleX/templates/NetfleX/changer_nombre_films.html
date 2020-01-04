@@ -1,0 +1,17 @@
+{% extends "NetfleX/website_template.html" %}
+
+{% block content %}
+
+
+<p style="float: left">Choisissez ici le nombre de films sur lequel sera basé la recommandation (vous devez choisir un nombre de films entre 1 et 10):</p> <br> <br>
+
+<form action="/NetfleX/block_avis/"  method='POST' class='form_nombre_choix'>
+	{% csrf_token %}
+	{{ form_nombre_choix.as_p }}
+	<input type="submit" value="Je valide le nombre de films !" class="button"/>
+</form>
+
+
+<p> Debug : nombre_films = {{ nombre_films}} </p>
+
+{% endblock %}
