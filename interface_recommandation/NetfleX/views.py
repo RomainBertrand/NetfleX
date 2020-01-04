@@ -21,8 +21,13 @@ def manage_notations(request):
     for movie in liste_movies:
         liste_movies[i] = str(movie[0])
         i += 1
+    nombre_films = 5
+    form_nombre_choix = ChoixNombreFilms(request.GET, request.FILES)
+    if form_nombre_choix.is_valid():
+        nombre_films = form_nombre_choix.cleaned_data.get('nombre_films')
+        print(nombre_films)
     # on créé une formSet factory issue de la classe NotationFilms
-    NotationFilmsFormSet = formset_factory(NotationFilms, extra=5, max_num=10)
+    NotationFilmsFormSet = formset_factory(NotationFilms, extra=nombre_films, max_num=10)
     films_choisis = []  # liste de titre et de notes correspondant aux films choisis
     if request.method == 'POST':
         formset = NotationFilmsFormSet(request.POST, request.FILES)
@@ -43,7 +48,11 @@ def home(request):
 
 def page_finale(request):
     """ Appelle la fonction de matching et affiche le résultat """
-    NotationFilmsFormSet = formset_factory(NotationFilms, extra=5, max_num=10)
+    nombre_films = 5
+    form_nombre_choix = ChoixNombreFilms(request.GET, request.FILES)
+    if form_nombre_choix.is_valid():
+        nombre_films = form_nombre_choix.cleaned_data.get('nombre_films')
+    NotationFilmsFormSet = formset_factory(NotationFilms, extra=nombre_films, max_num=10)
     films_choisis = []
     if request.method == "POST":
         formset = NotationFilmsFormSet(request.POST, request.FILES)
