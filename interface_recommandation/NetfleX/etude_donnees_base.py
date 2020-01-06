@@ -63,4 +63,4 @@ def meilleure_correlation(utilisateur, avec_notes=False) -> int:
             if int(film_possibles[2*ind_film]) not in liste_films:
                 # au vu du nombre d'avis de chaque utilisateur (>30), on aura un film en commun
                 films_a_recommander.append(int(film_possibles[2*ind_film]))
-    return films_a_recommander[random.randint(0,len(films_a_recommander))]
+    return films_a_recommander[random.randint(0, len(films_a_recommander))]
