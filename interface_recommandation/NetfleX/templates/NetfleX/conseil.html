@@ -1,0 +1,45 @@
+{% extends "NetfleX/website_template.html" %}
+
+{% block content %}
+
+<p class="Presentation">Veuillez choisir un film puis indiquez si vous l'aimez ou le détestez.</p>
+<p style="float:left">En fonction de votre réponse, nous vous conseillerons des films appréciés par des utilisateurs ayant le même avis que vous.</p>
+<br>
+<br>
+
+<form action="/NetfleX/conseil/"  method='POST' class='form_film_conseil'>
+    {% csrf_token %}
+    {{ aime_ou_deteste.non_field_errors }}
+    <p class="aime_ou_deteste">
+        {{ aime_ou_deteste.titre.errors }}
+        <label for="{{ aime_ou_deteste.titre.id_for_label }}">Titre:</label>
+        {{ aime_ou_deteste.titre }}
+        <datalist id="Films">
+            {% for filmTitle in liste_movies %}
+                <option value="{{ filmTitle }}">
+            {% endfor %}
+        </datalist>
+    </p>
+    <p class="box">
+        {{ aime_ou_deteste.film_conseil_aime.errors }}
+        <label for="{{ form.film_conseil_aime.id_for_label }}">J'aime:</label>
+        {{ aime_ou_deteste.film_conseil_aime }}
+    </p>
+    <p class="box">
+        {{ aime_ou_deteste.film_conseil_deteste.errors }}
+        <label for="{{ form.film_conseil_deteste.id_for_label }}">Je déteste:</label>
+        {{ aime_ou_deteste.film_conseil_deteste }}
+    </p>
+    <input type="submit" value="Je valide le film pour le conseil!" class="button"/>
+</form>
+
+<p>Compte tenu du film que vous avez choisi, nous vous conseillons la liste de films suivante : </p>
+
+    <ul>
+        {% for film in films_possibles %}
+        <li>{{ film }}</li>
+        {%endfor%}
+    </ul>
+
+    
+{% endblock %}

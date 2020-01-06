@@ -3,37 +3,42 @@
     outline : none;
     border-radius : 12px;
     vertical-align : middle;
-  }
+}
 
 
-  .form_film{
-    text-align: middle;
-    /*width: 800px;*/
-  }
+.form_film{
+  text-align: middle;
+}
 
 
-  #id_form-0-titre, #id_form-1-titre, #id_form-2-titre, #id_form-3-titre, #id_form-4-titre, #id_form-5-titre, #id_form-6-titre,
-  #id_form-7-titre, #id_form-8-titre, #id_form-9-titre{
-    padding: 2px;
-    border: 3px solid rgb(116, 113, 113);
-    margin-top: 2px;
-    margin-bottom: 2px;
-    width: 350px;
-  }
+#id_form-0-titre, #id_form-1-titre, #id_form-2-titre, #id_form-3-titre, #id_form-4-titre, #id_form-5-titre, #id_form-6-titre,
+#id_form-7-titre, #id_form-8-titre, #id_form-9-titre, #id_titre{
+  padding: 2px;
+  border: 3px solid rgb(116, 113, 113);
+  margin-top: 2px;
+  margin-bottom: 2px;
+  width: 350px;
+}
 
 
-  #id_form-0-note, #id_form-1-note, #id_form-2-note, #id_form-3-note, #id_form-4-note, #id_form-5-note, #id_form-6-note,
-  #id_form-7-note, #id_form-8-note, #id_form-9-note, #id_nombre_films{
-    padding: 2px;
-    border: 3px solid rgb(116, 113, 113);
-    margin-top: 2px;
-    margin-bottom: 2px;
-    width: 80px;
-  }
+#id_form-0-note, #id_form-1-note, #id_form-2-note, #id_form-3-note, #id_form-4-note, #id_form-5-note, #id_form-6-note,
+#id_form-7-note, #id_form-8-note, #id_form-9-note, #id_nombre_films{
+  padding: 2px;
+  border: 3px solid rgb(116, 113, 113);
+  margin-top: 2px;
+  margin-bottom: 2px;
+  width: 80px;
+}
 
 
 .form_nombre_choix{
   text-align: middle;
-  background-color: #green;
   width: 25%;
+}
+
+.form_film_conseil{
+  padding: 2px;
+  border: 3px solid rgb(116, 113, 113);
+  margin-top: 2px;
+  margin-bottom: 2px;
 }

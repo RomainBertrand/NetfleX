@@ -6,13 +6,12 @@ import sqlite3
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.forms import formset_factory
-from NetfleX.etude_donnees_base import meilleure_correlation
-from .forms import NotationFilms, ChoixNombreFilms
+from NetfleX.etude_donnees_base import meilleure_correlation, conseil_film
+from .forms import NotationFilms, ChoixNombreFilms, ChoixFilm
 
 
-def manage_notations(request):
-    """ Gère le formulaire de demande de films et de notes """
-    # on créé la liste des noms de films pour avoir le menu déroulant
+def creation_liste_films():
+    """ Création de la liste de films proposés à partir de la base de données """
     lien = sqlite3.connect("base_noms_film.db")
     curseur = lien.cursor()
     curseur.execute("SELECT DISTINCT title FROM noms_film")
@@ -21,6 +20,12 @@ def manage_notations(request):
     for movie in liste_movies:
         liste_movies[i] = str(movie[0])
         i += 1
+    return liste_movies
+
+
+def manage_notations(request):
+    """ Gère le formulaire de demande de films et de notes """
+    liste_movies = creation_liste_films()
     nombre_films = 5
     form_nombre_choix = ChoixNombreFilms(request.GET, request.FILES)
     if form_nombre_choix.is_valid():
@@ -46,6 +51,15 @@ def home(request):
     return render(request, "NetfleX/page_accueil.html", locals())
 
 
+def reaffiche_formulaire():
+    """Réafficher le formulaire si l'une des propositions n'est pas un film de la base de données"""
+    nombre_films = 5
+    NotationFilmsFormSet = formset_factory(NotationFilms, extra=nombre_films, max_num=10)
+    formset = NotationFilmsFormSet()
+    message = "Veuillez choisir uniquement des films dans la liste"
+    return formset, message
+
+
 def page_finale(request):
     """ Appelle la fonction de matching et affiche le résultat """
     nombre_films = 5
@@ -56,6 +70,7 @@ def page_finale(request):
     films_choisis = []
     if request.method == "POST":
         formset = NotationFilmsFormSet(request.POST, request.FILES)
+        #print(request.POST)
         if formset.is_valid():
             for film_form in formset:
                 titre = film_form.cleaned_data.get('titre')
@@ -98,6 +113,8 @@ def page_finale(request):
                 str(tuple(film_recommande))))  # on récupère son titre
             titre_recommande = curseur.fetchall()[0][0]
             return render(request, "NetfleX/page_finale.html", locals())
+        if not formset.is_valid():
+            formset, message = reaffiche_formulaire()
     return render(request, "NetfleX/block_avis.html", locals())
 
 
@@ -111,6 +128,38 @@ def changement_nombre_films(request):
     else:
         form_nombre_choix = ChoixNombreFilms()
     return render(request, "NetfleX/changer_nombre_films.html", locals())
+
+
+def conseil(request):
+    """ Conseils de films basés sur le choix d'un film """
+    
+    # Pour avoir les propositions issues de la bdd
+    liste_movies = creation_liste_films()
+
+    if request.method == 'POST':
+        aime_ou_deteste = ChoixFilm(request.POST, request.FILES)
+        if aime_ou_deteste.is_valid():
+            lien = sqlite3.connect("base_noms_film.db")
+            curseur = lien.cursor()
+
+            titre = aime_ou_deteste.cleaned_data.get('titre')
+            titre = [titre, titre]
+            curseur.execute("SELECT movieId FROM noms_film WHERE title IN {}".format(str(tuple(titre))))
+            id_titre = int(curseur.fetchall()[0][0])
+            aime = aime_ou_deteste.cleaned_data.get('film_conseil_aime')
+            numeros_films_possibles = conseil_film(id_titre, aime)
+            films_possibles = []
+
+            
+            for film in numeros_films_possibles :
+                film = [str(film), str(film)]
+                curseur.execute("SELECT DISTINCT title FROM noms_film WHERE movieId IN {}".format(
+                    str(tuple(film))))  # on récupère son titre
+                films_possibles.append(curseur.fetchall()[0][0])
+            return render(request, "NetfleX/conseil.html", locals())
+    else:
+        aime_ou_deteste = ChoixFilm()
+    return render(request, "NetfleX/conseil.html", locals())
 
 
 def contact(request):

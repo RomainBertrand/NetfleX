@@ -18,7 +18,7 @@
     margin: 0;
   }*/
 
-  ul {
+  .menu {
     list-style-type: none;
     margin: 30;
     padding: 0;
@@ -26,7 +26,7 @@
     background-color: #333;
   }
   
-  li {
+  .item_menu {
     float: left;
     font-size: large;
     border-right: 1px solid #bbb;
@@ -35,7 +35,7 @@
     border-left: 1px solid #bbb;
   }
 
-  li a {
+  .item_menu a {
     display: block;
     color: white;
     text-align: center;
@@ -43,7 +43,7 @@
     text-decoration: none;
   }
 
-  li a:hover {
+  .item_menu a:hover {
     background-color: #111;
   }
 
