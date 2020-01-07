@@ -30,9 +30,16 @@
         <label for="{{ form.film_conseil_deteste.id_for_label }}">Je déteste:</label>
         {{ aime_ou_deteste.film_conseil_deteste }}
     </p>
+    <p>
+        {{ aime_ou_deteste.nombre_films.errors }}
+        <label for="{{ form.nombre_films.id_for_label }}">Combien de conseils de films voulez-vous?</label>
+        {{ aime_ou_deteste.nombre_films }}
+    </p>
     <input type="submit" value="Je valide le film pour le conseil!" class="button"/>
 </form>
 
+
+{% if films_possibles %}
 <p>Compte tenu du film que vous avez choisi, nous vous conseillons la liste de films suivante : </p>
 
     <ul>
@@ -40,6 +47,6 @@
         <li>{{ film }}</li>
         {%endfor%}
     </ul>
-
+{% endif %}
     
 {% endblock %}

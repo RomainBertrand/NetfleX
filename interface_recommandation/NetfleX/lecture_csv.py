@@ -96,3 +96,31 @@ def init_noms_films()->(dict, dict):
 
     fichier_noms.close()
     return dico_noms_films, dico_films_noms
+
+
+def init_tags_films()->dict:
+    """
+        Initialisation du dico id_films / tags du film
+    """
+
+    dico_tags_films = {}
+
+    nom_fichier = "ml-latest-small/movies.csv"
+    with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
+
+
+        reader = csv.reader(fichier_noms)
+
+        premiere_ligne = True
+        for row in reader:
+
+            if not premiere_ligne:
+
+                id_film = row[0]
+                tags_film = row[2]
+
+                dico_tags_films[str(id_film)] = tags_film
+            premiere_ligne = False
+
+    fichier_noms.close()
+    return dico_tags_films

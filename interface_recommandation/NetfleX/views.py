@@ -147,7 +147,9 @@ def conseil(request):
             curseur.execute("SELECT movieId FROM noms_film WHERE title IN {}".format(str(tuple(titre))))
             id_titre = int(curseur.fetchall()[0][0])
             aime = aime_ou_deteste.cleaned_data.get('film_conseil_aime')
-            numeros_films_possibles = conseil_film(id_titre, aime)
+            nombre_films = aime_ou_deteste.cleaned_data.get('nombre_films')
+            print(aime)
+            numeros_films_possibles = conseil_film(id_titre, aime, nombre_films)
             films_possibles = []
 
             
@@ -156,6 +158,10 @@ def conseil(request):
                 curseur.execute("SELECT DISTINCT title FROM noms_film WHERE movieId IN {}".format(
                     str(tuple(film))))  # on récupère son titre
                 films_possibles.append(curseur.fetchall()[0][0])
+            print(films_possibles)
+            if not films_possibles:
+                films_possibles = ["""Désolé, nous ne sommes pas en mesure de vous conseiller, 
+                    votre avis n'est pas commun par nos utilisateurs..."""]
             return render(request, "NetfleX/conseil.html", locals())
     else:
         aime_ou_deteste = ChoixFilm()

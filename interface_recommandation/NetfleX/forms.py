@@ -53,6 +53,7 @@ class ChoixFilm(forms.Form):
         attrs={'list': 'Films', 'class': 'form_film'}))
     film_conseil_aime = forms.BooleanField(required=False)
     film_conseil_deteste = forms.BooleanField(required=False)
+    nombre_films = forms.IntegerField(max_value=10, min_value=1)
 
     def clean(self):
         cleaned_data = super().clean()
