@@ -96,5 +96,5 @@ def conseil_film(film: int, aime: bool, nombre_de_conseils: int = 5)->list:
                 films_possibles.append(int(utilisateur_actif[2 * ind_film]))
         compteur_utilisateur += 1
 
-    return [films_possibles[random.randint(0, len(films_possibles))] for i in range(nombre_de_conseils)]
+    return [films_possibles[random.randint(0, len(films_possibles))] for i in range(min(nombre_de_conseils, len(films_possibles)))]
     

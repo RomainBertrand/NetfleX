@@ -42,11 +42,47 @@
 {% if films_possibles %}
 <p>Compte tenu du film que vous avez choisi, nous vous conseillons la liste de films suivante : </p>
 
+    <table class="resume" >
+
+        <tr>
+            <th>Films choisis</th>
+            {% for tag in liste_tags %}
+            <th class="note">{{ tag }}</th>
+            {% endfor %}
+        </tr>
+        {% for film in tableau_tags %}
+        <tr>
+            {% for tag in film %}
+                {% if tag %}
+                    <td class="note">{{ tag }}</td>
+
+                {% endif %}
+                {% if not tag %}
+                    <td class="note"> </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+
     <ul>
-        {% for film in films_possibles %}
+        {% for film in film_avec_tag %}
         <li>{{ film }}</li>
         {%endfor%}
     </ul>
 {% endif %}
+
+<p>Debug :</p>
+{{ tags_films_choisis }}
+
+                    <!--{% for val in tag %}
+                        {% if val.1 %}
+                            <td>{{ val.0 }}</td>
+                        {% endif %}
+                        {% if not val.1 %}
+                            <td>X</td>
+                        {% endif %}
+                    {% endfor %}-->
     
 {% endblock %}

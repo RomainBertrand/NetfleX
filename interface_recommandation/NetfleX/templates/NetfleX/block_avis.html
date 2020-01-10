@@ -18,7 +18,7 @@
 
 	<p>{{ message }}</p>
 
-		<form action="/NetfleX/page_finale/"  method='POST' class='form_film'>
+	<form action="/NetfleX/page_finale/"  method='POST' class='form_film'>
 
 	{{ formset.management_form }}
 		{% csrf_token %}
@@ -28,7 +28,7 @@
 				{% for filmTitle in liste_movies %}
 					<option value="{{ filmTitle }}">
 				{% endfor %}
-                        </datalist>
+            </datalist>
 		{% endfor %}
 		<input type="submit" value="Je valide mon choix de films !" class="button"/>
 	</form>

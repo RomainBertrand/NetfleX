@@ -101,6 +101,7 @@ def init_noms_films()->(dict, dict):
 def init_tags_films()->dict:
     """
         Initialisation du dico id_films / tags du film
+        Les tags sont une liste de string
     """
 
     dico_tags_films = {}
@@ -117,7 +118,10 @@ def init_tags_films()->dict:
             if not premiere_ligne:
 
                 id_film = row[0]
+                #tags_films est du format "tag_1|tag_2|...|tag_n"
                 tags_film = row[2]
+
+                tags_film = tags_film.split("|")
 
                 dico_tags_films[str(id_film)] = tags_film
             premiere_ligne = False
