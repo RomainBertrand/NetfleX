@@ -1,5 +1,5 @@
 """
-fichier qui gère l'affichage, créé les variables nécessaires pour les fichiers html.
+Fichier qui gère l'affichage, créé les variables nécessaires pour les fichiers html.
 """
 
 import sqlite3

@@ -32,7 +32,7 @@
     </p>
     <p>
         {{ aime_ou_deteste.nombre_films.errors }}
-        <label for="{{ form.nombre_films.id_for_label }}">Combien de conseils de films voulez-vous?</label>
+        <label for="{{ form.nombre_films.id_for_label }}">Combien de conseils de films voulez-vous? (entre 1 et 10)</label>
         {{ aime_ou_deteste.nombre_films }}
     </p>
     <input type="submit" value="Je valide le film pour le conseil!" class="button"/>
@@ -45,17 +45,26 @@
     <table class="resume" >
 
         <tr>
-            <th>Films choisis</th>
+            <th>Films conseillés</th>
             {% for tag in liste_tags %}
-            <th class="note">{{ tag }}</th>
+                <th class="tag">{{ tag }}</th>
             {% endfor %}
         </tr>
         {% for film in tableau_tags %}
         <tr>
             {% for tag in film %}
                 {% if tag %}
-                    <td class="note">{{ tag }}</td>
-
+                    <script type='text/javascript'> 
+                    var tag_j = "{{tag}}";
+                    alert(tag_j);
+                    if(tag_j == "True" ){
+                        document.write('<td class="note"><p>X</p></td>');
+                        alert('ici');
+                    } else{
+                        document.write('<td class="note">{{ tag }}</td>');
+                        alert('la');
+                    }
+                    </script>
                 {% endif %}
                 {% if not tag %}
                     <td class="note"> </td>
