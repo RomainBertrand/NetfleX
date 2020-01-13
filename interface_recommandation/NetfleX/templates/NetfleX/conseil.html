@@ -56,13 +56,10 @@
                 {% if tag %}
                     <script type='text/javascript'> 
                     var tag_j = "{{tag}}";
-                    alert(tag_j);
                     if(tag_j == "True" ){
                         document.write('<td class="note"><p>X</p></td>');
-                        alert('ici');
                     } else{
                         document.write('<td class="note">{{ tag }}</td>');
-                        alert('la');
                     }
                     </script>
                 {% endif %}
