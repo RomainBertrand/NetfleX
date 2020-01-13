@@ -35,7 +35,8 @@ class NotationFilms(forms.Form):
         liste_movies = creation_liste_films()
 
         if titre not in liste_movies:
-            raise forms.ValidationError('Veuillez sélectionner un film dans la liste')
+            raise forms.ValidationError(
+                'Veuillez sélectionner un film dans la liste')
 
 
 class ChoixNombreFilms(forms.Form):
@@ -64,9 +65,11 @@ class ChoixFilm(forms.Form):
         liste_movies = creation_liste_films()
 
         if titre not in liste_movies:
-            raise forms.ValidationError('Veuillez sélectionner un film dans la liste')
+            raise forms.ValidationError(
+                'Veuillez sélectionner un film dans la liste')
 
         if (film_conseil_aime and film_conseil_deteste):
-            raise forms.ValidationError('On ne peut pas aimer et détester un même film!')
+            raise forms.ValidationError(
+                'On ne peut pas aimer et détester un même film!')
         if not film_conseil_aime and not film_conseil_deteste:
             raise forms.ValidationError('Veuillez choisir une option')

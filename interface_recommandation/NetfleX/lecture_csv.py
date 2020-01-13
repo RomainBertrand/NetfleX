@@ -5,14 +5,15 @@ Created on Wed Nov  6 22:01:12 2019
 @author: maxime
 """
 
-###Objectif: Lecture de fichiers .csv
+# Objectif: Lecture de fichiers .csv
 
 import csv
 #
 # Ouverture du fichier source.
 #
 
-def init_data(avec_notes: bool = False)->(dict, dict, dict, int):
+
+def init_data(avec_notes: bool = False) -> (dict, dict, dict, int):
     """
         Construction des deux dictionnaires de base:
             Celui qui à un film associe les utilisateurs l'ayant vu et leur note
@@ -49,16 +50,17 @@ def init_data(avec_notes: bool = False)->(dict, dict, dict, int):
                     dico_nombre_vues[str(id_film)] = 1
 
                 else:
-                    #On concatène les utilisateurs si plusieurs ont vu le film
+                    # On concatène les utilisateurs si plusieurs ont vu le film
                     dico_films_avis[str(id_film)] += (id_utilisateur, avis)
                     dico_nombre_vues[str(id_film)] += 1
 
-
                 if str(id_utilisateur) not in dico_utilisateur_avis.keys():
-                    dico_utilisateur_avis[str(id_utilisateur)] = (id_film, avis)
+                    dico_utilisateur_avis[str(id_utilisateur)] = (
+                        id_film, avis)
                 else:
-                    #On concatène les films si l'utilisateur en a vu plusieurs
-                    dico_utilisateur_avis[str(id_utilisateur)] += (id_film, avis)
+                    # On concatène les films si l'utilisateur en a vu plusieurs
+                    dico_utilisateur_avis[str(
+                        id_utilisateur)] += (id_film, avis)
 
                 nombre_vues_tot += 1
 
@@ -68,7 +70,7 @@ def init_data(avec_notes: bool = False)->(dict, dict, dict, int):
     return dico_films_avis, dico_utilisateur_avis, dico_nombre_vues, nombre_vues_tot
 
 
-def init_noms_films()->(dict, dict):
+def init_noms_films() -> (dict, dict):
     """
         Initialisation du dico id_films / noms_films
     """
@@ -78,7 +80,6 @@ def init_noms_films()->(dict, dict):
 
     nom_fichier = "ml-latest-small/movies.csv"
     with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
-
 
         reader = csv.reader(fichier_noms)
 
@@ -98,7 +99,7 @@ def init_noms_films()->(dict, dict):
     return dico_noms_films, dico_films_noms
 
 
-def init_tags_films()->dict:
+def init_tags_films() -> dict:
     """
         Initialisation du dico id_films / tags du film
         Les tags sont une liste de string
@@ -109,7 +110,6 @@ def init_tags_films()->dict:
     nom_fichier = "ml-latest-small/movies.csv"
     with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
 
-
         reader = csv.reader(fichier_noms)
 
         premiere_ligne = True
@@ -118,7 +118,7 @@ def init_tags_films()->dict:
             if not premiere_ligne:
 
                 id_film = row[0]
-                #tags_films est du format "tag_1|tag_2|...|tag_n"
+                # tags_films est du format "tag_1|tag_2|...|tag_n"
                 tags_film = row[2]
 
                 tags_film = tags_film.split("|")

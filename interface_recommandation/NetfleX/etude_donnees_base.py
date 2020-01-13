@@ -9,10 +9,10 @@ Created on Sun Nov 10 17:04:37 2019
 
 import math
 import random
-from NetfleX.lecture_csv import *
+from NetfleX.lecture_csv import init_data
 
 
-def meilleure_correlation(utilisateur, avec_notes: bool = False)->int:
+def meilleure_correlation(utilisateur, avec_notes: bool = False) -> int:
     """
     Renvoie l'indice d'un film qui est censé plaire à l'utilisateur, au vu de ses goûts.
     0 si aucun film n'a été trouvé
@@ -66,35 +66,37 @@ def meilleure_correlation(utilisateur, avec_notes: bool = False)->int:
     return films_a_recommander[random.randint(0, len(films_a_recommander))]
 
 
-def conseil_film(film: int, aime: bool, nombre_de_conseils: int = 5)->list:
+def conseil_film(film: int, aime: bool, nombre_de_conseils: int = 5) -> list:
     """ Renvoie une liste de films aimés par des personnes du même avis que l'utilisateur sur le film saisi """
     # on initialise les dictionnaires
     avec_notes = True
-    dico_films_avis, dico_utilisateurs_avis, dico_nombre_vues, nombres_vues_tot = init_data(
+    dico_films_avis, dico_utilisateurs_avis, _, _ = init_data(
         avec_notes)
 
     # Tuples utilisateurs-avis
     utilisateurs_meme_avis = []
     utilisateurs_ayant_vu = dico_films_avis[str(film)]
     for ind_utilisateur in range(int(len(utilisateurs_ayant_vu) / 2)):
-        condition_accord = bool(float(utilisateurs_ayant_vu[2 * ind_utilisateur + 1]) > 3.5)
+        condition_accord = bool(
+            float(utilisateurs_ayant_vu[2 * ind_utilisateur + 1]) > 3.5)
         if not aime:
-            condition_accord = bool(float(utilisateurs_ayant_vu[2 * ind_utilisateur + 1]) < 2.5)
+            condition_accord = bool(
+                float(utilisateurs_ayant_vu[2 * ind_utilisateur + 1]) < 2.5)
         if condition_accord:
-            utilisateurs_meme_avis.append(utilisateurs_ayant_vu[2 * ind_utilisateur])
+            utilisateurs_meme_avis.append(
+                utilisateurs_ayant_vu[2 * ind_utilisateur])
 
-    #Films aimés par ces utilisateurs de même avis
-    films_possibles =[]
+    # Films aimés par ces utilisateurs de même avis
+    films_possibles = []
     compteur_utilisateur = 0
-    #while len(films_possibles) < nombre_de_conseils and compteur_utilisateur < len(utilisateurs_meme_avis):
+    # while len(films_possibles) < nombre_de_conseils and compteur_utilisateur < len(utilisateurs_meme_avis):
     while compteur_utilisateur < len(utilisateurs_meme_avis):
         # Tuple film-avis
         utilisateur_actif = dico_utilisateurs_avis[utilisateurs_meme_avis[compteur_utilisateur]]
         for ind_film in range(int(len(utilisateur_actif)/2)):
-            #if len(films_possibles) < nombre_de_conseils and float(utilisateur_actif[2 * ind_film + 1]) > 3.5:
+            # if len(films_possibles) < nombre_de_conseils and float(utilisateur_actif[2 * ind_film + 1]) > 3.5:
             if float(utilisateur_actif[2 * ind_film + 1]) > 3.5:
                 films_possibles.append(int(utilisateur_actif[2 * ind_film]))
         compteur_utilisateur += 1
 
     return [films_possibles[random.randint(0, len(films_possibles))] for i in range(min(nombre_de_conseils, len(films_possibles)))]
-    
