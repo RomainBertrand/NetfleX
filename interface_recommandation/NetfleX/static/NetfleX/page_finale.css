@@ -20,3 +20,13 @@
     border-left: 1px solid #bbb;
     margin-left: 35%;
 }
+
+
+.note{
+    padding: 2px;
+    text-align: center;
+    border-color: (116, 113, 113);
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 400px;
+}
