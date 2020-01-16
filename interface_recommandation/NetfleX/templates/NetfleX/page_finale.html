@@ -9,8 +9,9 @@
 	Vous lui avez donné la note : <span class="note_attribuee">{{ film.1 }}</span><br>
 	</p1>
 	{% endfor %}-->
-
-	<p>{{ message_meme_choix }}</p>
+	{% if message_meme_choix %}
+		<p>{{ message_meme_choix }}</p>
+	{% endif %}
 	<br>
 
 	<table class="resume" >

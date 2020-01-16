@@ -30,22 +30,11 @@ def manage_notations(request):  # ->HttpResponse
     form_nombre_choix = ChoixNombreFilms(request.GET, request.FILES)
     if form_nombre_choix.is_valid():
         nombre_films = form_nombre_choix.cleaned_data.get('nombre_films')
-        print(nombre_films)
-    # on créé une formSet factory issue de la classe NotationFilms
-    NotationFilmsFormSet = formset_factory(
-        NotationFilms, extra=nombre_films, max_num=10)
-    films_choisis = []  # liste de titre et de notes correspondant aux films choisis
-    if request.method == 'POST':
-        formset = NotationFilmsFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            for film_form in formset:
-                titre = film_form.cleaned_data.get('titre')
-                note = film_form.cleaned_data.get('note')
-                films_choisis.append([titre, note])
-            return page_finale(request)
-            #return render(request, "NetfleX/page_finale.html", locals())
-    else:
-        formset = NotationFilmsFormSet()
+    formset_is_valid, films_choisis, NotationFilmsFormSet, message_meme_choix = manage_form(
+        request, nombre_films, False)
+    if formset_is_valid:
+        return page_finale(request)
+    formset = NotationFilmsFormSet
     return render(request, "NetfleX/block_avis.html", locals())
 
 
@@ -54,36 +43,21 @@ def home(request):  # ->HttpResponse
     return render(request, "NetfleX/page_accueil.html", locals())
 
 
-def reaffiche_formulaire():
-    """Réafficher le formulaire si l'une des propositions n'est pas un film de la base de données"""
-    nombre_films = 5
-    NotationFilmsFormSet = formset_factory(
-        NotationFilms, extra=nombre_films, max_num=10)
-    formset = NotationFilmsFormSet()
-    message = "Veuillez choisir uniquement des films dans la liste"
-    return formset, message
-
-
-def page_finale(request):  # ->HttpResponse
-    """ Appelle la fonction de matching et affiche le résultat """
-
-    # Coix du nombre de films à noter
-    nombre_films = 5
-    form_nombre_choix = ChoixNombreFilms(request.GET, request.FILES)
-    if form_nombre_choix.is_valid():
-        nombre_films = form_nombre_choix.cleaned_data.get('nombre_films')
-
+def manage_form(request, nombre_films: int, from_page_finale: bool) -> (bool, list, formset_factory, str):
+    """ Ensures the form is valid. Otherwise, returns a blanck form"""
+    # On créé une formSet factory issue de la classe NotationFilms
     NotationFilmsFormSet = formset_factory(
         NotationFilms, extra=nombre_films, max_num=10)
     films_choisis = []
+    formset_is_valid = False
+    message_meme_choix = False
     if request.method == "POST":
         formset = NotationFilmsFormSet(request.POST, request.FILES)
-        # print(request.POST)
-        if formset.is_valid():
+        formset_is_valid = formset.is_valid()
+        if formset_is_valid:
             for film_form in formset:
                 titre = film_form.cleaned_data.get('titre')
                 note = film_form.cleaned_data.get('note')
-
                 # Si film déjà choisi
                 deja_choisi = False
                 for elem in films_choisis:
@@ -93,47 +67,63 @@ def page_finale(request):  # ->HttpResponse
                         deja_choisi = True
                 if not deja_choisi and titre is not None:
                     films_choisis.append([titre, note])
+    return formset_is_valid, films_choisis, formset if request.method == "POST" else NotationFilmsFormSet, message_meme_choix if from_page_finale else None
 
-            lien = sqlite3.connect("base_noms_film.db")
-            liste_titres = []
-            for film in films_choisis:
-                liste_titres.append(film[0])
-            curseur = lien.cursor()
-            # S'il y a moins de 5 films  rentrés par l'utilisateur :
-            liste_titres = [elem for elem in liste_titres if elem is not None]
-            # Si la liste est vide, on renvoie le formulaire
-            if not liste_titres:
-                return render(request, "NetfleX/block_avis.html", locals())
-            # on récupère les Id des films choisis par l'utilisateur
-            # Le tuple pose problème s'il n'y a qu'un film dans la liste
-            enlever_virgule = False
-            if len(liste_titres) == 1:
-                enlever_virgule = True
-            liste_titres = str(tuple(liste_titres))
-            if enlever_virgule:
-                #liste_titres = liste_titres + liste_titres
-                liste_titres = list(liste_titres)
-                liste_titres.pop(-2)
-                string_titres = ""
-                for character in liste_titres:
-                    string_titres += character
-                liste_titres = string_titres
-            curseur.execute(
-                "SELECT movieId FROM noms_film WHERE title IN {}".format(liste_titres))
-            liste_movieId = curseur.fetchall()
-            utilisateur = []
-            for i in range(len(liste_movieId)):
-                utilisateur.append(
-                    [int(liste_movieId[i][0]), films_choisis[i][1]])
-            film_recommande = [1]
-            # Meilleure corrélation en fonction des films et des notes de l'utilisateur
-            film_recommande.append(str(meilleure_correlation(utilisateur)))
-            curseur.execute("SELECT title FROM noms_film WHERE movieId IN {}".format(
-                str(tuple(film_recommande))))  # on récupère son titre
-            titre_recommande = curseur.fetchall()[0][0]
-            return render(request, "NetfleX/page_finale.html", locals())
-        # if not formset.is_valid():
-         #   formset, message = reaffiche_formulaire()
+
+def movie_list_to_string(request, films_choisis) -> (str, bool):
+    """ Change list of movies in a readable string for sqlite """
+    liste_titres = []
+    for film in films_choisis:
+        liste_titres.append(film[0])
+    # S'il y a moins de 5 films  rentrés par l'utilisateur :
+    liste_titres = [elem for elem in liste_titres if elem is not None]
+    # Si la liste est vide, on renvoie le formulaire
+    if not liste_titres:
+        return [], True
+    # on récupère les Id des films choisis par l'utilisateur
+    # Le tuple pose problème s'il n'y a qu'un film dans la liste
+    enlever_virgule = False
+    if len(liste_titres) == 1:
+        enlever_virgule = True
+    liste_titres = str(tuple(liste_titres))
+    if enlever_virgule:
+        # liste_titres = liste_titres + liste_titres
+        liste_titres = list(liste_titres)
+        liste_titres.pop(-2)
+        string_titres = ""
+        for character in liste_titres:
+            string_titres += character
+        liste_titres = string_titres
+    return liste_titres, False
+
+
+def page_finale(request):  # ->HttpResponse
+    """ Appelle la fonction de matching et affiche le résultat """
+    # Choix du nombre de films à noter
+    nombre_films = 5
+    formset_is_valid, films_choisis, formset, message_meme_choix = manage_form(
+        request, nombre_films, True)
+    if formset_is_valid:
+        lien = sqlite3.connect("base_noms_film.db")
+        curseur = lien.cursor()
+        liste_titres, empty_formset = movie_list_to_string(
+            request, films_choisis)
+        if empty_formset:
+            return render(request, "NetfleX/block_avis.html", locals())
+        curseur.execute(
+            "SELECT movieId FROM noms_film WHERE title IN {}".format(liste_titres))
+        liste_movieId = curseur.fetchall()
+        utilisateur = []
+        for i in range(len(liste_movieId)):
+            utilisateur.append(
+                [int(liste_movieId[i][0]), films_choisis[i][1]])
+        film_recommande = [1]
+        # Meilleure corrélation en fonction des films et des notes de l'utilisateur
+        film_recommande.append(str(meilleure_correlation(utilisateur)))
+        curseur.execute("SELECT title FROM noms_film WHERE movieId IN {}".format(
+            str(tuple(film_recommande))))  # on récupère son titre
+        titre_recommande = curseur.fetchall()[0][0]
+        return render(request, "NetfleX/page_finale.html", locals())
     return render(request, "NetfleX/block_avis.html", locals())
 
 
