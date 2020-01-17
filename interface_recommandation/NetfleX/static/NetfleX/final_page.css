@@ -9,7 +9,7 @@
 }
 
 
-.titre_recommande{
+.recommended_title{
     font-size: large;
     font-weight: bold;
     text-align: middle;
@@ -22,7 +22,7 @@
 }
 
 
-.note{
+.rating{
     padding: 2px;
     text-align: center;
     border-color: (116, 113, 113);

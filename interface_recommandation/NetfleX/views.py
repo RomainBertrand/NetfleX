@@ -5,226 +5,222 @@ Fichier qui gère l'affichage, créé les variables nécessaires pour les fichie
 import sqlite3
 from django.shortcuts import render
 from django.forms import formset_factory
-from NetfleX.etude_donnees_base import meilleure_correlation, conseil_film
-from NetfleX.lecture_csv import init_tags_films
-from .forms import NotationFilms, ChoixNombreFilms, ChoixFilm
+from NetfleX.etude_donnees_base import meilleure_correlation, advice_movie
+from NetfleX.lecture_csv import init_tags_moviess
+from .forms import MoviesRatings, ChoiceMovieNumber, MovieChoice
 
 
-def creation_liste_films() -> list:
-    """ Création de la liste de films proposés à partir de la base de données """
-    lien = sqlite3.connect("base_noms_film.db")
-    curseur = lien.cursor()
-    curseur.execute("SELECT DISTINCT title FROM noms_film")
-    liste_movies = curseur.fetchall()
+def create_list_movies() -> list:
+    """ Création de la liste de movies proposés à partir de la base de données """
+    link = sqlite3.connect("base_noms_film.db")
+    cursor = link.cursor()
+    cursor.execute("SELECT DISTINCT title FROM noms_film")
+    list_movies = cursor.fetchall()
     i = 0
-    for movie in liste_movies:
-        liste_movies[i] = str(movie[0])
+    for movie in list_movies:
+        list_movies[i] = str(movie[0])
         i += 1
-    return liste_movies
+    return list_movies
 
 
 def manage_notations(request):  # ->HttpResponse
-    """ Gère le formulaire de demande de films et de notes """
-    liste_movies = creation_liste_films()
-    nombre_films = 5
-    form_nombre_choix = ChoixNombreFilms(request.GET, request.FILES)
-    if form_nombre_choix.is_valid():
-        nombre_films = form_nombre_choix.cleaned_data.get('nombre_films')
-    formset_is_valid, films_choisis, NotationFilmsFormSet, message_meme_choix = manage_form(
-        request, nombre_films, False)
+    """ Gère le formulaire de demande de movies et de ratings """
+    list_movies = create_list_movies()
+    movie_number = 5
+    form_choice_number = ChoiceMovieNumber(request.GET, request.FILES)
+    if form_choice_number.is_valid():
+        movie_number = form_choice_number.cleaned_data.get('movie_number')
+    formset_is_valid, movies_chosen, notation_movie_formset, same_choice_message = manage_form(
+        request, movie_number, False)
     if formset_is_valid:
-        return page_finale(request)
-    formset = NotationFilmsFormSet
-    return render(request, "NetfleX/block_avis.html", locals())
+        return final_page(request)
+    formset = notation_movie_formset
+    return render(request, "NetfleX/recommendation.html", locals())
 
 
 def home(request):  # ->HttpResponse
     """ Page d'accueil """
-    return render(request, "NetfleX/page_accueil.html", locals())
+    return render(request, "NetfleX/home.html", locals())
 
 
-def manage_form(request, nombre_films: int, from_page_finale: bool) -> (bool, list, formset_factory, str):
+def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, list, formset_factory, str):
     """ Ensures the form is valid. Otherwise, returns a blanck form"""
-    # On créé une formSet factory issue de la classe NotationFilms
-    NotationFilmsFormSet = formset_factory(
-        NotationFilms, extra=nombre_films, max_num=10)
-    films_choisis = []
+    # On créé une formSet factory issue de la classe MoviesRatings
+    notation_movie_formset = formset_factory(
+        MoviesRatings, extra=movie_number, max_num=10)
+    movies_chosen = []
     formset_is_valid = False
-    message_meme_choix = False
+    same_choice_message = False
     if request.method == "POST":
-        formset = NotationFilmsFormSet(request.POST, request.FILES)
+        formset = notation_movie_formset(request.POST, request.FILES)
         formset_is_valid = formset.is_valid()
         if formset_is_valid:
-            for film_form in formset:
-                titre = film_form.cleaned_data.get('titre')
-                note = film_form.cleaned_data.get('note')
-                # Si film déjà choisi
-                deja_choisi = False
-                for elem in films_choisis:
-                    if elem[0] == titre:
-                        message_meme_choix = """Vous semblez avoir choisi deux fois le même film.
+            for movie_form in formset:
+                title = movie_form.cleaned_data.get('title')
+                rating = movie_form.cleaned_data.get('rating')
+                # Si movie déjà choisi
+                already_chosen = False
+                for elem in movies_chosen:
+                    if elem[0] == title:
+                        same_choice_message = """Vous semblez avoir choisi deux fois le même movie.
                             Seul le premier sélectionné sera pris en compte. """
-                        deja_choisi = True
-                if not deja_choisi and titre is not None:
-                    films_choisis.append([titre, note])
-    return formset_is_valid, films_choisis, formset if request.method == "POST" else NotationFilmsFormSet, message_meme_choix if from_page_finale else None
+                        already_chosen = True
+                if not already_chosen and title is not None:
+                    movies_chosen.append([title, rating])
+    return formset_is_valid, movies_chosen, formset if request.method == "POST" else notation_movie_formset, same_choice_message if from_final_page else None
 
 
-def movie_list_to_string(request, films_choisis) -> (str, bool):
+def movie_list_to_string(request, movies_chosen) -> (str, bool):
     """ Change list of movies in a readable string for sqlite """
-    liste_titres = []
-    for film in films_choisis:
-        liste_titres.append(film[0])
-    # S'il y a moins de 5 films  rentrés par l'utilisateur :
-    liste_titres = [elem for elem in liste_titres if elem is not None]
+    list_titles = []
+    for movie in movies_chosen:
+        list_titles.append(movie[0])
+    # S'il y a moins de 5 movies  rentrés par l'user :
+    list_titles = [elem for elem in list_titles if elem is not None]
     # Si la liste est vide, on renvoie le formulaire
-    if not liste_titres:
+    if not list_titles:
         return [], True
-    # on récupère les Id des films choisis par l'utilisateur
-    # Le tuple pose problème s'il n'y a qu'un film dans la liste
-    enlever_virgule = False
-    if len(liste_titres) == 1:
-        enlever_virgule = True
-    liste_titres = str(tuple(liste_titres))
-    if enlever_virgule:
-        # liste_titres = liste_titres + liste_titres
-        liste_titres = list(liste_titres)
-        liste_titres.pop(-2)
-        string_titres = ""
-        for character in liste_titres:
-            string_titres += character
-        liste_titres = string_titres
-    return liste_titres, False
+    # on récupère les Id des movies choisis par l'user
+    # Le tuple pose problème s'il n'y a qu'un movie dans la liste
+    remove_comma = False
+    if len(list_titles) == 1:
+        remove_comma = True
+    list_titles = str(tuple(list_titles))
+    if remove_comma:
+        # list_titles = list_titles + list_titles
+        list_titles = list(list_titles)
+        list_titles.pop(-2)
+        string_titles = ""
+        for character in list_titles:
+            string_titles += character
+        list_titles = string_titles
+    return list_titles, False
 
 
-def page_finale(request):  # ->HttpResponse
+def final_page(request):  # ->HttpResponse
     """ Appelle la fonction de matching et affiche le résultat """
-    # Choix du nombre de films à noter
-    nombre_films = 5
-    formset_is_valid, films_choisis, formset, message_meme_choix = manage_form(
-        request, nombre_films, True)
+    # Choix du nombre de movies à ratingr
+    movie_number = 5
+    formset_is_valid, movies_chosen, formset, same_choice_message = manage_form(
+        request, movie_number, True)
     if formset_is_valid:
-        lien = sqlite3.connect("base_noms_film.db")
-        curseur = lien.cursor()
-        liste_titres, empty_formset = movie_list_to_string(
-            request, films_choisis)
+        link = sqlite3.connect("base_noms_film.db")
+        cursor = link.cursor()
+        list_titles, empty_formset = movie_list_to_string(
+            request, movies_chosen)
         if empty_formset:
-            return render(request, "NetfleX/block_avis.html", locals())
-        curseur.execute(
-            "SELECT movieId FROM noms_film WHERE title IN {}".format(liste_titres))
-        liste_movieId = curseur.fetchall()
-        utilisateur = []
-        for i in range(len(liste_movieId)):
-            utilisateur.append(
-                [int(liste_movieId[i][0]), films_choisis[i][1]])
-        film_recommande = [1]
-        # Meilleure corrélation en fonction des films et des notes de l'utilisateur
-        film_recommande.append(str(meilleure_correlation(utilisateur)))
-        curseur.execute("SELECT title FROM noms_film WHERE movieId IN {}".format(
-            str(tuple(film_recommande))))  # on récupère son titre
-        titre_recommande = curseur.fetchall()[0][0]
-        return render(request, "NetfleX/page_finale.html", locals())
-    return render(request, "NetfleX/block_avis.html", locals())
+            return render(request, "NetfleX/recommendation.html", locals())
+        cursor.execute(
+            "SELECT movieId FROM noms_film WHERE title IN {}".format(list_titles))
+        list_movie_id = cursor.fetchall()
+        user = []
+        for i in range(len(list_movie_id)):
+            user.append(
+                [int(list_movie_id[i][0]), movies_chosen[i][1]])
+        recommended_movie = [1]
+        # Meilleure corrélation en fonction des movies et des ratings de l'user
+        recommended_movie.append(str(meilleure_correlation(user)))
+        cursor.execute("SELECT title FROM noms_film WHERE movieId IN {}".format(
+            str(tuple(recommended_movie))))  # on récupère son title
+        recommended_title = cursor.fetchall()[0][0]
+        return render(request, "NetfleX/final_page.html", locals())
+    return render(request, "NetfleX/recommendation.html", locals())
 
 
-def changement_nombre_films(request):  # ->HttpResponse
-    """ Changement du nombre de films à noter pour la recommandation """
+def change_movie_number(request):  # ->HttpResponse
+    """ Changement du nombre de movies à ratingr pour la recommandation """
     if request.method == 'POST':
-        form_nombre_choix = ChoixNombreFilms(request.POST, request.FILES)
-        if form_nombre_choix.is_valid():
-            nombre_films = form_nombre_choix.cleaned_data.get('nombre_films')
-            return render(request, "NetfleX/block_avis.html", locals())
+        form_choice_number = ChoiceMovieNumber(request.POST, request.FILES)
+        if form_choice_number.is_valid():
+            movie_number = form_choice_number.cleaned_data.get('movie_number')
+            return render(request, "NetfleX/recommendation.html", locals())
     else:
-        form_nombre_choix = ChoixNombreFilms()
-    return render(request, "NetfleX/changer_nombre_films.html", locals())
+        form_choice_number = ChoiceMovieNumber()
+    return render(request, "NetfleX/change_movie_number.html", locals())
 
 
-def tags_pour_liste_de_films(liste_id_films: list) -> dict:
-    """ Retourne une liste de tags correspondants aux films de la liste """
+def tags_for_movie_list(liste_movie_ids: list) -> dict:
+    """ Retourne une liste de tags correspondants aux movies de la liste """
 
-    dico_tags_films = init_tags_films()
+    dictionnary_tags_movies = init_tags_moviess()
 
-    tags_films_choisis = {}
-    for film in liste_id_films:
-        tags_films_choisis[str(film)] = (dico_tags_films[str(film)])
+    tags_movies_chosen = {}
+    for movie in liste_movie_ids:
+        tags_movies_chosen[str(movie)] = (dictionnary_tags_movies[str(movie)])
 
-    return tags_films_choisis
+    return tags_movies_chosen
 
 
-def conseil(request):  # ->HttpResponse
-    """ Conseils de films basés sur le choix d'un film """
+def advice(request):  # ->HttpResponse
+    """ Conseils de movies basés sur le choix d'un movie """
 
     # Pour avoir les propositions issues de la bdd
-    liste_movies = creation_liste_films()
+    list_movies = create_list_movies()
 
     if request.method == 'POST':
-        aime_ou_deteste = ChoixFilm(request.POST, request.FILES)
-        if aime_ou_deteste.is_valid():
-            lien = sqlite3.connect("base_noms_film.db")
-            curseur = lien.cursor()
+        loves_or_hates = MovieChoice(request.POST, request.FILES)
+        if loves_or_hates.is_valid():
+            link = sqlite3.connect("base_noms_film.db")
+            cursor = link.cursor()
 
-            titre = aime_ou_deteste.cleaned_data.get('titre')
-            titre = [titre, titre]
-            curseur.execute(
-                "SELECT movieId FROM noms_film WHERE title IN {}".format(str(tuple(titre))))
-            id_titre = int(curseur.fetchall()[0][0])
-            aime = aime_ou_deteste.cleaned_data.get('film_conseil_aime')
-            nombre_films = aime_ou_deteste.cleaned_data.get('nombre_films')
-            print(aime)
-            numeros_films_possibles = conseil_film(
-                id_titre, aime, nombre_films)
-            films_possibles = []
+            title = loves_or_hates.cleaned_data.get('title')
+            title = [title, title]
+            cursor.execute(
+                "SELECT movieId FROM noms_film WHERE title IN {}".format(str(tuple(title))))
+            id_title = int(cursor.fetchall()[0][0])
+            likes = loves_or_hates.cleaned_data.get('movie_advice_likes')
+            movie_number = loves_or_hates.cleaned_data.get('movie_number')
+            number_possible_movies = advice_movie(
+                id_title, likes, movie_number)
+            possible_movies = []
 
-            for film in numeros_films_possibles:
-                film = [str(film), str(film)]
-                curseur.execute("SELECT DISTINCT title FROM noms_film WHERE movieId IN {}".format(
-                    str(tuple(film))))  # on récupère son titre
-                films_possibles.append(curseur.fetchall()[0][0])
-            print(films_possibles)
-            if not films_possibles:
-                films_possibles = ["""Désolé, nous ne sommes pas en mesure de vous conseiller,
-                    votre avis n'est pas commun par nos utilisateurs..."""]
+            for movie in number_possible_movies:
+                movie = [str(movie), str(movie)]
+                cursor.execute("SELECT DISTINCT title FROM noms_film WHERE movieId IN {}".format(
+                    str(tuple(movie))))  # on récupère son title
+                possible_movies.append(cursor.fetchall()[0][0])
+            if not possible_movies:
+                possible_movies = ["""Désolé, nous ne sommes pas en mesure de vous adviceler,
+                    votre rating n'est pas commun par nos users..."""]
 
-            tags_films_choisis = tags_pour_liste_de_films(
-                numeros_films_possibles)
+            tags_movies_chosen = tags_for_movie_list(
+                number_possible_movies)
 
             # Création de la liste des tags
-            liste_tags = set()
-            for elem in tags_films_choisis.values():
+            tags_list = set()
+            for elem in tags_movies_chosen.values():
                 for tag in elem:
-                    liste_tags.add(tag)
-            print(liste_tags)
-
-            # Création d'une liste (nom du film, [tags associés])
-            film_avec_tag = []
+                    tags_list.add(tag)
+            # Création d'une liste (nom du movie, [tags associés])
+            movie_with_tag = []
             # tableau tag : pour le tableau de l'affichage html
-            # [[False for tag in tags_films_choisis[num_film]] for num_film in numeros_films_possibles]
-            tableau_tags = []
-            for ind, num_film in enumerate(numeros_films_possibles):
-                film_avec_tag.append(
-                    [films_possibles[ind], tags_films_choisis[str(num_film)]])
-                # [(films_possibles[ind], True)]
-                tableau_film_courant = [films_possibles[ind]]
-                for tag in liste_tags:
-                    if tag in tags_films_choisis[str(num_film)]:
-                        tableau_film_courant.append(True)  # ((True, False))
+            # [[False for tag in tags_movies_chosen[num_movie]] for num_movie in number_possible_movies]
+            tags_table = []
+            for ind, num_movie in enumerate(number_possible_movies):
+                movie_with_tag.append(
+                    [possible_movies[ind], tags_movies_chosen[str(num_movie)]])
+                # [(possible_movies[ind], True)]
+                table_current_movie = [possible_movies[ind]]
+                for tag in tags_list:
+                    if tag in tags_movies_chosen[str(num_movie)]:
+                        table_current_movie.append(True)  # ((True, False))
                     else:
-                        tableau_film_courant.append(False)
-                tableau_tags.append(tableau_film_courant)
+                        table_current_movie.append(False)
+                tags_table.append(table_current_movie)
 
-            print(tableau_tags)
+            print(tags_table)
 
-            return render(request, "NetfleX/conseil.html", locals())
+            return render(request, "NetfleX/advice.html", locals())
     else:
-        aime_ou_deteste = ChoixFilm()
-    return render(request, "NetfleX/conseil.html", locals())
+        loves_or_hates = MovieChoice()
+    return render(request, "NetfleX/advice.html", locals())
 
 
 def contact(request):  # ->HttpResponse
     """ Page Contact """
-    return render(request, "NetfleX/page_contact.html", locals())
+    return render(request, "NetfleX/contact.html", locals())
 
 
 def sources(request):  # ->HttpResponse
     """ Page Sources """
-    return render(request, "NetfleX/page_source.html", locals())
+    return render(request, "NetfleX/source.html", locals())

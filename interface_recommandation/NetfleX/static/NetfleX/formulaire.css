@@ -6,13 +6,13 @@
 }
 
 
-.form_film{
+.form_movie{
   text-align: middle;
 }
 
 
-#id_form-0-titre, #id_form-1-titre, #id_form-2-titre, #id_form-3-titre, #id_form-4-titre, #id_form-5-titre, #id_form-6-titre,
-#id_form-7-titre, #id_form-8-titre, #id_form-9-titre, #id_titre{
+#id_form-0-title, #id_form-1-title, #id_form-2-title, #id_form-3-title, #id_form-4-title, #id_form-5-title, #id_form-6-title,
+#id_form-7-title, #id_form-8-title, #id_form-9-title, #id_title{
   padding: 2px;
   border: 3px solid rgb(116, 113, 113);
   margin-top: 2px;
@@ -21,8 +21,8 @@
 }
 
 
-#id_form-0-note, #id_form-1-note, #id_form-2-note, #id_form-3-note, #id_form-4-note, #id_form-5-note, #id_form-6-note,
-#id_form-7-note, #id_form-8-note, #id_form-9-note, #id_nombre_films{
+#id_form-0-rating, #id_form-1-rating, #id_form-2-rating, #id_form-3-rating, #id_form-4-rating, #id_form-5-rating, #id_form-6-rating,
+#id_form-7-rating, #id_form-8-rating, #id_form-9-rating, #id_movie_number{
   padding: 2px;
   border: 3px solid rgb(116, 113, 113);
   margin-top: 2px;
@@ -31,12 +31,12 @@
 }
 
 
-.form_nombre_choix{
+.form_choice_number{
   text-align: middle;
   width: 25%;
 }
 
-.form_film_conseil{
+.form_movie_advice{
   padding: 2px;
   border: 3px solid rgb(116, 113, 113);
   margin-top: 2px;

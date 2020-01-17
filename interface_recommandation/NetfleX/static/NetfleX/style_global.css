@@ -103,19 +103,19 @@
   }
 
 
-  .explication{
+  .explanation{
     text-align: left;
     font-size: smaller;
   }
 
 /* Ceci se situe maintenant dans le css formulaire.css
 
-  .form_film {
+  .form_movie {
     text-align: middle;
     width: 800px;
   }
 
-  #id_form-0-titre, #id_form-1-titre, #id_form-2-titre, #id_form-3-titre, #id_form-4-titre {
+  #id_form-0-title, #id_form-1-title, #id_form-2-title, #id_form-3-title, #id_form-4-title {
     padding: 2px;
     border: 3px solid rgb(116, 113, 113);
     margin-top: 2px;
@@ -123,7 +123,7 @@
     width: 350px;
   }
 
-  #id_form-0-note, #id_form-1-note, #id_form-2-note, #id_form-3-note, #id_form-4-note{
+  #id_form-0-rating, #id_form-1-rating, #id_form-2-rating, #id_form-3-rating, #id_form-4-rating{
     padding: 2px;
     border: 3px solid rgb(116, 113, 113);
     margin-top: 2px;

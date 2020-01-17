@@ -13,118 +13,118 @@ import csv
 #
 
 
-def init_data(avec_notes: bool = False) -> (dict, dict, dict, int):
+def init_data(with_ratings: bool = False) -> (dict, dict, dict, int):
     """
         Construction des deux dictionnaires de base:
-            Celui qui à un film associe les utilisateurs l'ayant vu et leur note
-            Celui qui à un utilisateur associe les films qu'il a vu et leur note
-        Passer l'argument avec_note = True pour obtenir les notes et non les avis
+            Celui qui à un movie associe les users l'ayant vu et leur rating
+            Celui qui à un user associe les movies qu'il a vu et leur rating
+        Passer l'argument avec_rating = True pour obtenir les ratings et non les rating
 
-        Compte également le nombre de vues total et le nombre de vues par film
+        Compte également le nombre de vues total et le nombre de vues par movie
     """
 
-    dico_films_avis = {}
-    dico_utilisateur_avis = {}
+    dictionnary_movies_ratings = {}
+    dictionnary_users_ratings = {}
 
-    nombre_vues_tot = 0
-    dico_nombre_vues = {}
+    total_view_count = 0
+    dictionnary_views_number = {}
 
-    nom_fichier = "ml-latest-small/ratings.csv"
-    with open(nom_fichier, newline='') as fichier_notes:
+    file_name = "ml-latest-small/ratings.csv"
+    with open(file_name, newline='') as file_ratings:
 
-        reader = csv.reader(fichier_notes)
+        reader = csv.reader(file_ratings)
 
-        premiere_ligne = True
+        first_line = True
         for row in reader:
-            if not premiere_ligne:
+            if not first_line:
 
-                id_film = row[1]
-                id_utilisateur = row[0]
-                avis = float(row[2])
+                movie_id = row[1]
+                user_id = row[0]
+                rating = float(row[2])
 
-                if not avec_notes:
-                    avis = bool(avis > 3)
+                if not with_ratings:
+                    rating = bool(rating > 3)
 
-                if str(id_film) not in dico_films_avis.keys():
-                    dico_films_avis[str(id_film)] = (id_utilisateur, avis)
-                    dico_nombre_vues[str(id_film)] = 1
+                if str(movie_id) not in dictionnary_movies_ratings.keys():
+                    dictionnary_movies_ratings[str(movie_id)] = (user_id, rating)
+                    dictionnary_views_number[str(movie_id)] = 1
 
                 else:
-                    # On concatène les utilisateurs si plusieurs ont vu le film
-                    dico_films_avis[str(id_film)] += (id_utilisateur, avis)
-                    dico_nombre_vues[str(id_film)] += 1
+                    # On concatène les users si plusieurs ont vu le movie
+                    dictionnary_movies_ratings[str(movie_id)] += (user_id, rating)
+                    dictionnary_views_number[str(movie_id)] += 1
 
-                if str(id_utilisateur) not in dico_utilisateur_avis.keys():
-                    dico_utilisateur_avis[str(id_utilisateur)] = (
-                        id_film, avis)
+                if str(user_id) not in dictionnary_users_ratings.keys():
+                    dictionnary_users_ratings[str(user_id)] = (
+                        movie_id, rating)
                 else:
-                    # On concatène les films si l'utilisateur en a vu plusieurs
-                    dico_utilisateur_avis[str(
-                        id_utilisateur)] += (id_film, avis)
+                    # On concatène les movies si l'user en a vu plusieurs
+                    dictionnary_users_ratings[str(
+                        user_id)] += (movie_id, rating)
 
-                nombre_vues_tot += 1
+                total_view_count += 1
 
-            premiere_ligne = False
+            first_line = False
 
-    fichier_notes.close()
-    return dico_films_avis, dico_utilisateur_avis, dico_nombre_vues, nombre_vues_tot
+    file_ratings.close()
+    return dictionnary_movies_ratings, dictionnary_users_ratings, dictionnary_views_number, total_view_count
 
 
-def init_noms_films() -> (dict, dict):
+def init_movies_names() -> (dict, dict):
     """
-        Initialisation du dico id_films / noms_films
+        Initialisation du dico movie_ids / noms_movies
     """
 
-    dico_noms_films = {}
-    dico_films_noms = {}
+    dictionnary_names_movies = {}
+    dictionnary_movies_names = {}
 
-    nom_fichier = "ml-latest-small/movies.csv"
-    with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
+    file_name = "ml-latest-small/movies.csv"
+    with open(file_name, newline='', encoding='utf-8') as file_names:
 
-        reader = csv.reader(fichier_noms)
+        reader = csv.reader(file_names)
 
-        premiere_ligne = True
+        first_line = True
         for row in reader:
 
-            if not premiere_ligne:
+            if not first_line:
 
-                id_film = row[0]
-                nom_film = row[1]
+                movie_id = row[0]
+                movie_name = row[1]
 
-                dico_noms_films[str(id_film)] = nom_film
-                dico_films_noms[nom_film] = str(id_film)
-            premiere_ligne = False
+                dictionnary_names_movies[str(movie_id)] = movie_name
+                dictionnary_movies_names[movie_name] = str(movie_id)
+            first_line = False
 
-    fichier_noms.close()
-    return dico_noms_films, dico_films_noms
+    file_names.close()
+    return dictionnary_names_movies, dictionnary_movies_names
 
 
-def init_tags_films() -> dict:
+def init_tags_moviess() -> dict:
     """
-        Initialisation du dico id_films / tags du film
+        Initialisation du dico movie_ids / tags du movie
         Les tags sont une liste de string
     """
 
-    dico_tags_films = {}
+    dictionnary_tags_movies = {}
 
-    nom_fichier = "ml-latest-small/movies.csv"
-    with open(nom_fichier, newline='', encoding='utf-8') as fichier_noms:
+    file_name = "ml-latest-small/movies.csv"
+    with open(file_name, newline='', encoding='utf-8') as file_names:
 
-        reader = csv.reader(fichier_noms)
+        reader = csv.reader(file_names)
 
-        premiere_ligne = True
+        first_line = True
         for row in reader:
 
-            if not premiere_ligne:
+            if not first_line:
 
-                id_film = row[0]
-                # tags_films est du format "tag_1|tag_2|...|tag_n"
-                tags_film = row[2]
+                movie_id = row[0]
+                # tags_moviess est du format "tag_1|tag_2|...|tag_n"
+                tags_movies = row[2]
 
-                tags_film = tags_film.split("|")
+                tags_movies = tags_movies.split("|")
 
-                dico_tags_films[str(id_film)] = tags_film
-            premiere_ligne = False
+                dictionnary_tags_movies[str(movie_id)] = tags_movies
+            first_line = False
 
-    fichier_noms.close()
-    return dico_tags_films
+    file_names.close()
+    return dictionnary_tags_movies

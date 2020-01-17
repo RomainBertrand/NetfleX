@@ -1,0 +1,51 @@
+{% extends "NetfleX/website_template.html" %}
+
+{% block content %}
+
+	<p class = Presentation>Résumé de vos choix :</p>
+
+	<!--{% for movie in movies_chosen %}
+	<p1>Vous avez choisi le movie : <span class="movie_choisi">{{ movie.0  }}</span>	<br>
+	Vous lui avez donné la rating : <span class="rating_attribuee">{{ movie.1 }}</span><br>
+	</p1>
+	{% endfor %}-->
+	{% if same_choice_message %}
+		<p>{{ same_choice_message }}</p>
+	{% endif %}
+	<br>
+
+	<table class="resume" >
+
+		<tr>
+			<th>Films choisis</th>
+			<th class="rating">Notes attribuées</th>
+		</tr>
+		{% for movie in movies_chosen %}
+		<tr>
+			<td>{{ movie.0 }}</td>
+			<td>{{ movie.1 }}</td>
+		</tr>
+		{% endfor %}
+
+	</table>
+
+	<p class = "Presentation">Compte tenu de vos choix, nous vous proposons le film suivant :</p>
+
+	<p class = "recommended_title"> {{ recommended_title }}</p>
+
+	<p style="text-align: left">Merci!</p>
+	
+	<!--<h3>Debug :</h3>
+	id du movie : {{ list_movie_id }}<br>
+		couple id et rating : {{ user }}<br>
+		movie recommandé : <span>{{ recommended_movie }} </span> <br> <br>
+
+	title : <span class="title_rec"> {{ recommended_title }}</span> <br>
+	<p1> Merci! </p1>
+
+	<h3>Fin du debug</h3>-->
+
+
+
+
+{% endblock %}

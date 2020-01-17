@@ -1,0 +1,81 @@
+{% extends "NetfleX/website_template.html" %}
+
+{% block content %}
+
+<p class="Presentation">Veuillez choisir un film puis indiquez si vous l'aimez ou le détestez.</p>
+<p style="float:left">En fonction de votre réponse, nous vous conseillerons des films appréciés par des utilisateurs ayant le même avis que vous.</p>
+<br>
+<br>
+
+<form action="/NetfleX/advice/"  method='POST' class='form_movie_advice'>
+    {% csrf_token %}
+    {{ loves_or_hates.non_field_errors }}
+    <p class="loves_or_hates">
+        {{ loves_or_hates.title.errors }}
+        <label for="{{ loves_or_hates.title.id_for_label }}">Titre:</label>
+        {{ loves_or_hates.title }}
+        <datalist id="Films">
+            {% for movieTitle in list_movies %}
+                <option value="{{ movieTitle }}">
+            {% endfor %}
+        </datalist>
+    </p>
+    <p class="box">
+        {{ loves_or_hates.movie_advice_likes.errors }}
+        <label for="{{ form.movie_advice_likes.id_for_label }}">J'aime:</label>
+        {{ loves_or_hates.movie_advice_likes }}
+    </p>
+    <p class="box">
+        {{ loves_or_hates.movie_advice_hates.errors }}
+        <label for="{{ form.movie_advice_hates.id_for_label }}">Je déteste:</label>
+        {{ loves_or_hates.movie_advice_hates }}
+    </p>
+    <p>
+        {{ loves_or_hates.movie_number.errors }}
+        <label for="{{ form.movie_number.id_for_label }}">Combien de conseils de films voulez-vous? (entre 1 et 10)</label>
+        {{ loves_or_hates.movie_number }}
+    </p>
+    <input type="submit" value="Je valide le film pour le conseil!" class="button"/>
+</form>
+
+
+{% if possible_movies %}
+<p>Compte tenu du film que vous avez choisi, nous vous conseillons la liste de films suivante : </p>
+
+    <table class="resume" >
+
+        <tr>
+            <th>Films conseillés</th>
+            {% for tag in tags_list %}
+                <th class="rating">{{ tag }}</th>
+            {% endfor %}
+        </tr>
+        {% for movie in tags_table %}
+        <tr>
+            {% for tag in movie %}
+                {% if tag %}
+                    <script type='text/javascript'> 
+                    var tag_j = "{{tag}}";
+                    if(tag_j == "True" ){
+                        document.write('<td class="rating"><p>X</p></td>');
+                    } else{
+                        document.write('<td class="rating">{{ tag }}</td>');
+                    }
+                    </script>
+                {% endif %}
+                {% if not tag %}
+                    <td class="rating"> </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <!--<ul>
+        {% for movie in movie_with_tag %}
+        <li>{{ movie }}</li>
+        {%endfor%}
+    </ul>-->
+{% endif %}
+{% endblock %}

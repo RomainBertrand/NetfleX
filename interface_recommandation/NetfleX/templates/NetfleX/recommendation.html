@@ -11,22 +11,22 @@
 		nous puissions vous recommander un nouveau film :
 	</p>
 
-	<p class="explication"> Si vous souhaitez changer le nombre de films sur lequel se base 
+	<p class="explanation"> Si vous souhaitez changer le nombre de films sur lequel se base 
 	la recommandation, <a href="/NetfleX/changement/">cliquez ici</a>.  </p>
 
-	<p> Debug : nombre_films = {{ nombre_films }} </p>
+	<!--<p> Debug : movie_number = {{ movie_number }} </p>-->
 
 	<p>{{ message }}</p>
 
-	<form action=""  method='POST' class='form_film'>
+	<form action=""  method='POST' class='form_movie'>
 
 	{{ formset.management_form }}
 		{% csrf_token %}
-		{% for film_form in formset %}
-			{{ film_form.as_p }}
+		{% for movie_form in formset %}
+			{{ movie_form.as_p }}
 			<datalist id="Films">
-				{% for filmTitle in liste_movies %}
-					<option value="{{ filmTitle }}">
+				{% for movieTitle in list_movies %}
+					<option value="{{ movieTitle }}">
 				{% endfor %}
             </datalist>
 		{% endfor %}
