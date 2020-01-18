@@ -137,7 +137,7 @@ def final_page(request):  # ->HttpResponse
 def tags_for_movie_list(list_movie_ids: list) -> dict:
     """ Return a list of tags corresponding to movies of list_movie_ids """
 
-    dictionnary_tags_movies, list_of_all_tags = init_tags_movies()
+    dictionnary_tags_movies, _ = init_tags_movies()
 
     tags_movies_chosen = {}
     for movie in list_movie_ids:
@@ -202,7 +202,6 @@ def advice(request):  # ->HttpResponse
             likes = loves_or_hates.cleaned_data.get('movie_advice_likes')
             movie_number = loves_or_hates.cleaned_data.get('movie_number')
             movie_tag = loves_or_hates.cleaned_data.get('movie_tag')
-            print(movie_tag==False)
             # Ids of movies
             number_possible_movies = advice_movie(
                 id_title, likes,  movie_tag, movie_number)
@@ -219,6 +218,8 @@ def advice(request):  # ->HttpResponse
                    number_possible_movies)
 
                 tags_list, tags_table = table_of_tags_for_chosen_movies(tags_movies_chosen, number_possible_movies, possible_movies)
+            else:
+                no_possible_movies = True
 
             return render(request, "NetfleX/advice.html", locals())
     else:

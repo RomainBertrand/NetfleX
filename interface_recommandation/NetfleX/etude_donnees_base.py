@@ -9,7 +9,7 @@ Created on Sun Nov 10 17:04:37 2019
 
 import math
 import random
-from NetfleX.lecture_csv import init_data
+from NetfleX.lecture_csv import init_data, init_tags_movies
 
 
 def meilleure_correlation(user, with_ratings: bool = False) -> int:
@@ -68,12 +68,14 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
 
 def advice_movie(movie: int, likes: bool, movie_tag: str, advices_number: int = 5) -> list:
     """ Renvoie une liste de movies aimés par des personnes du même rating que l'user sur le movie saisi """
-    # on initialise les dictionnaires
+    # Initialisation of dictionnaries
     with_ratings = True
     dictionnary_movies_ratings, dictionnary_users_ratings, _, _ = init_data(
         with_ratings)
 
-    # Tuples users-rating
+    dictionnary_tags_movies, list_of_all_tags = init_tags_movies()
+
+    # users_same_rating : Tuples users-rating
     users_same_rating = []
     users_who_saw = dictionnary_movies_ratings[str(movie)]
     for ind_user in range(int(len(users_who_saw) / 2)):
@@ -94,18 +96,21 @@ def advice_movie(movie: int, likes: bool, movie_tag: str, advices_number: int = 
         # Tuple movie-rating
         active_user = dictionnary_users_ratings[users_same_rating[users_count]]
         for ind_movie in range(int(len(active_user)/2)):
-            # if len(possible_movies) < advices_number and float(active_user[2 * ind_movie + 1]) > 3.5:
-            if float(active_user[2 * ind_movie + 1]) > 3.5:
-                possible_movies.append(int(active_user[2 * ind_movie]))
+            if int(active_user[2 * ind_movie]) != movie:
+                if movie_tag == "No":
+                    if float(active_user[2 * ind_movie + 1]) > 3.5:
+                        possible_movies.append(int(active_user[2 * ind_movie]))
+                else:
+                    if float(active_user[2 * ind_movie + 1]) > 3 and movie_tag in dictionnary_tags_movies[active_user[2 * ind_movie]]:
+                        possible_movies.append(int(active_user[2 * ind_movie]))
         users_count += 1
 
     final_movies = []
     acc = 0
     while acc < min(advices_number, len(possible_movies)):
-        potential_movie_id = possible_movies[random.randint(0, len(possible_movies))]
+        potential_movie_id = possible_movies[random.randint(0, len(possible_movies) - 1)]
         if potential_movie_id not in final_movies:
             final_movies.append(potential_movie_id)
             acc += 1
-
 
     return final_movies

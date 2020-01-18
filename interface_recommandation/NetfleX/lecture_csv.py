@@ -8,9 +8,6 @@ Created on Wed Nov  6 22:01:12 2019
 # Objectif: Lecture de fichiers .csv
 
 import csv
-#
-# Ouverture du fichier source.
-#
 
 
 def init_data(with_ratings: bool = False) -> (dict, dict, dict, int):
@@ -130,5 +127,4 @@ def init_tags_movies() -> (dict, dict):
             first_line = False
 
     file_names.close()
-    print(list_of_all_tags)
     return dictionnary_tags_movies, list_of_all_tags
