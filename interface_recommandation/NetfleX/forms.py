@@ -5,6 +5,8 @@ Classe MoviesRatings, qui contient un champ pour le title du movie et un autre p
 import sqlite3
 from django import forms
 
+LIST_OF_ALL_TAGS = ["Documentary", "Drama", "Adventure", "Fantasy", "War", "Crime", "Children", "Romance", "Comedy",
+                    "Western", "Horror", "Thriller", "Film-Noir", "Sci-Fi", "Action", "IMAX", "Musical", "Animation", "Mystery", "No"]
 
 def create_list_movies():
     """ Création de la liste de movies proposés à partir de la base de données """
@@ -36,14 +38,14 @@ class MoviesRatings(forms.Form):
 
         if title not in list_movies:
             raise forms.ValidationError(
-                'Veuillez sélectionner un movie dans la liste')
+                'Veuillez sélectionner un film dans la liste')
 
 
 class ChoiceMovieNumber(forms.Form):
     """
     Formulaire pour choisir le nombre de movies sur lequel se base la recommandation
     """
-    movie_number = forms.IntegerField(max_value=10, min_value=1)
+    movie_number = forms.IntegerField(max_value=10, min_value=1, initial=5)
 
 
 class MovieChoice(forms.Form):
@@ -54,7 +56,13 @@ class MovieChoice(forms.Form):
         attrs={'list': 'Films', 'class': 'form_movie'}))
     movie_advice_likes = forms.BooleanField(required=False)
     movie_advice_hates = forms.BooleanField(required=False)
-    movie_number = forms.IntegerField(max_value=10, min_value=1)
+    movie_number = forms.IntegerField(max_value=10, min_value=1, initial=5)
+
+
+    list_of_tuple = [(LIST_OF_ALL_TAGS[i], LIST_OF_ALL_TAGS[i]) for i in range(len(LIST_OF_ALL_TAGS))]
+    LIST_OF_ALL_TAGS = list_of_tuple
+
+    movie_tag = forms.ChoiceField(choices=LIST_OF_ALL_TAGS, widget=forms.Select(), initial="No", required=False)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -66,10 +74,10 @@ class MovieChoice(forms.Form):
 
         if title not in list_movies:
             raise forms.ValidationError(
-                'Veuillez sélectionner un movie dans la liste')
+                'Veuillez sélectionner un film dans la liste')
 
         if (movie_advice_likes and movie_advice_hates):
             raise forms.ValidationError(
-                'On ne peut pas likesr et détester un même movie!')
+                'On ne peut pas aimer et détester un même film!')
         if not movie_advice_likes and not movie_advice_hates:
             raise forms.ValidationError('Veuillez choisir une option')

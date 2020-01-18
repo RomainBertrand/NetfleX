@@ -99,13 +99,14 @@ def init_movies_names() -> (dict, dict):
     return dictionnary_names_movies, dictionnary_movies_names
 
 
-def init_tags_moviess() -> dict:
+def init_tags_movies() -> (dict, dict):
     """
         Initialisation du dico movie_ids / tags du movie
         Les tags sont une liste de string
     """
 
     dictionnary_tags_movies = {}
+    list_of_all_tags = set()
 
     file_name = "ml-latest-small/movies.csv"
     with open(file_name, newline='', encoding='utf-8') as file_names:
@@ -124,7 +125,10 @@ def init_tags_moviess() -> dict:
                 tags_movies = tags_movies.split("|")
 
                 dictionnary_tags_movies[str(movie_id)] = tags_movies
+                for elem in tags_movies :
+                    list_of_all_tags.add(elem)
             first_line = False
 
     file_names.close()
-    return dictionnary_tags_movies
+    print(list_of_all_tags)
+    return dictionnary_tags_movies, list_of_all_tags

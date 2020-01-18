@@ -35,6 +35,11 @@
         <label for="{{ form.movie_number.id_for_label }}">Combien de conseils de films voulez-vous? (entre 1 et 10)</label>
         {{ loves_or_hates.movie_number }}
     </p>
+    <p class="choice">
+        {{ loves_or_hates.movie_tag.errors }}
+        <label for="{{ form.movie_tag.id_for_label }}">Voulez-vous voir uniquement des films d'un certain genre? (Facultatif)</label>
+        {{ loves_or_hates.movie_tag }}
+    </p>
     <input type="submit" value="Je valide le film pour le conseil!" class="button"/>
 </form>
 
@@ -55,7 +60,7 @@
             {% for tag in movie %}
                 {% if tag %}
                     <script type='text/javascript'> 
-                    var tag_j = "{{tag}}";
+                    var tag_j = "{{ tag }}";
                     if(tag_j == "True" ){
                         document.write('<td class="rating"><p>X</p></td>');
                     } else{
@@ -78,4 +83,10 @@
         {%endfor%}
     </ul>-->
 {% endif %}
+
+{% if not possible_movies %}
+<p> Désolé, nous ne sommes pas en mesure de vous conseiller,
+    votre avis n'est pas commun parmi nos utilisateurs... </p>
+{% endif %}
+
 {% endblock %}

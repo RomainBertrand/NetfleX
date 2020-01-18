@@ -66,7 +66,7 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
     return movies_to_recommend[random.randint(0, len(movies_to_recommend))]
 
 
-def advice_movie(movie: int, likes: bool, advices_number: int = 5) -> list:
+def advice_movie(movie: int, likes: bool, movie_tag: str, advices_number: int = 5) -> list:
     """ Renvoie une liste de movies aimés par des personnes du même rating que l'user sur le movie saisi """
     # on initialise les dictionnaires
     with_ratings = True
@@ -99,4 +99,13 @@ def advice_movie(movie: int, likes: bool, advices_number: int = 5) -> list:
                 possible_movies.append(int(active_user[2 * ind_movie]))
         users_count += 1
 
-    return [possible_movies[random.randint(0, len(possible_movies))] for i in range(min(advices_number, len(possible_movies)))]
+    final_movies = []
+    acc = 0
+    while acc < min(advices_number, len(possible_movies)):
+        potential_movie_id = possible_movies[random.randint(0, len(possible_movies))]
+        if potential_movie_id not in final_movies:
+            final_movies.append(potential_movie_id)
+            acc += 1
+
+
+    return final_movies
