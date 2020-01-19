@@ -17,9 +17,10 @@ from django import forms
 LIST_OF_ALL_TAGS = ["Documentary", "Drama", "Adventure", "Fantasy", "War", "Crime", "Children", "Romance", "Comedy",
                     "Western", "Horror", "Thriller", "Film-Noir", "Sci-Fi", "Action", "IMAX", "Musical", "Animation", "Mystery", "No"]
 
+
 def create_list_movies() -> list:
     """Create the list of all the movies of the database
-    
+
     Returns:
     list_movies (list): List of all the movies of the database
     """
@@ -91,15 +92,16 @@ class MovieChoice(forms.Form):
     movie_advice_hates = forms.BooleanField(required=False)
     movie_number = forms.IntegerField(max_value=10, min_value=1, initial=5)
 
-
-    list_of_tuple = [(LIST_OF_ALL_TAGS[i], LIST_OF_ALL_TAGS[i]) for i in range(len(LIST_OF_ALL_TAGS))]
+    list_of_tuple = [(LIST_OF_ALL_TAGS[i], LIST_OF_ALL_TAGS[i])
+                     for i in range(len(LIST_OF_ALL_TAGS))]
     LIST_OF_ALL_TAGS = list_of_tuple
 
-    movie_tag = forms.ChoiceField(choices=LIST_OF_ALL_TAGS, widget=forms.Select(), initial="No", required=False)
+    movie_tag = forms.ChoiceField(
+        choices=LIST_OF_ALL_TAGS, widget=forms.Select(), initial="No", required=False)
 
     def clean(self):
         """Personalized rules of validation for the form
-        
+
         Ensure that title is in the database.
         Ensure that the movie is not liked and hated at the same time
         """
