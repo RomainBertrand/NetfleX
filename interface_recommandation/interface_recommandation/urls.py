@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# urlpattern is a Django variable, this is why it doesn't conform the snake_case convention
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('NetfleX/', include('NetfleX.urls')),

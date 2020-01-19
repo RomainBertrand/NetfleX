@@ -1,5 +1,14 @@
-"""
-Classe MoviesRatings, qui contient un champ pour le title du movie et un autre pour la rating
+"""Definition of all the classes needed to create the various forms of NetfleX
+
+All classes inherits from forms.Form, a Django-predefined class for forms.
+
+Classes:
+MoviesRatings --  For a form that ask for a movie and its rating
+ChoiceMovieNumber -- To choose the number of films you want to rate for your recommendation
+MovieChoice -- For the form on the advice page
+
+Functions:
+create_list_movies -- list of all the movies that are in the database
 """
 
 import sqlite3
@@ -8,8 +17,13 @@ from django import forms
 LIST_OF_ALL_TAGS = ["Documentary", "Drama", "Adventure", "Fantasy", "War", "Crime", "Children", "Romance", "Comedy",
                     "Western", "Horror", "Thriller", "Film-Noir", "Sci-Fi", "Action", "IMAX", "Musical", "Animation", "Mystery", "No"]
 
-def create_list_movies():
-    """ Création de la liste de movies proposés à partir de la base de données """
+def create_list_movies() -> list:
+    """Create the list of all the movies of the database
+    
+    Returns:
+    list_movies (list): List of all the movies of the database
+    """
+
     link = sqlite3.connect("base_noms_film.db")
     cursor = link.cursor()
     cursor.execute("SELECT DISTINCT title FROM noms_film")
@@ -22,15 +36,23 @@ def create_list_movies():
 
 
 class MoviesRatings(forms.Form):
+    """A form made of the title of a film and its rating
+
+    Attributes:
+    title (forms.CharField): Title of a film from the database. Required
+    rating (forms.IntegerField): Rating of the film. (max_value: 5, min_value: 0). Required
+
+    Methods:
+    clean -- Rules for the form validation.
     """
-    Le title est un charfield pour que l'user puisse taper ce qu'il veut.
-    De plus, on passe la liste des titles de movies en arguent du form html
-    """
+
     title = forms.CharField(max_length=100, required=True, widget=forms.TextInput(
         attrs={'list': 'Films', 'class': 'form_movie'}))
     rating = forms.IntegerField(max_value=5, min_value=0, required=True)
 
     def clean(self):
+        """Personalized rules of validation for the form: ensure that title is in the database"""
+
         cleaned_data = super().clean()
         title = cleaned_data.get('title')
 
@@ -42,15 +64,26 @@ class MoviesRatings(forms.Form):
 
 
 class ChoiceMovieNumber(forms.Form):
-    """
-    Formulaire pour choisir le nombre de movies sur lequel se base la recommandation
+    """A form for choosing the number of MoviesRatings forms NetfleX' user wants to fill
+
+    Attributes:
+    movie_number (forms.IntegerField): The number of films that will be used for the recommendation. (max_value: 10, min_value: 1, default: 5) Required
     """
     movie_number = forms.IntegerField(max_value=10, min_value=1, initial=5)
 
 
 class MovieChoice(forms.Form):
-    """
-    Formulaire pour choisir le movie sur lequel se base le advice
+    """Collect information needed to give advice of movies
+
+    Attributes:
+    title (forms.CharField): Title of the chosen film. Required
+    movie_advice_likes (forms.BooleanField): True if NetfeX' user likes the chosen film. Not required
+    movie_advice_hates (forms.BooleanField): True if NetfeX' user hates the chosen film. Not required
+    movie_number (forms.IntegerField): Number of movies displayed as advice. (max_value: 10, min_value: 1, default: 5) Required
+    movie_tag (forms.ChoiceField): Tag of the movies NetfleX' user would like to see. (choices: LIST_OF_ALL_TAGS, default: "No") Not required
+
+    Methods:
+    clean -- Rules for the form validation.
     """
     title = forms.CharField(max_length=100, required=True, widget=forms.TextInput(
         attrs={'list': 'Films', 'class': 'form_movie'}))
@@ -65,6 +98,11 @@ class MovieChoice(forms.Form):
     movie_tag = forms.ChoiceField(choices=LIST_OF_ALL_TAGS, widget=forms.Select(), initial="No", required=False)
 
     def clean(self):
+        """Personalized rules of validation for the form
+        
+        Ensure that title is in the database.
+        Ensure that the movie is not liked and hated at the same time
+        """
         cleaned_data = super().clean()
         title = cleaned_data.get('title')
         movie_advice_likes = cleaned_data.get('movie_advice_likes')

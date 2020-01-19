@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+# urlpattern is a Django variable, this is why it doesn't conform the snake_case convention
+
 urlpatterns = [
     path('', views.home, name="accueil"),
     path('recommendation/', views.manage_notations, name="Première page"),

@@ -1,5 +1,19 @@
-"""
-Fichier qui gère l'affichage, créé les variables nécessaires pour les fichiers html.
+# -*- coding: utf-8 -*-
+"""Manage the display and the variables needed by the html files
+
+Functions:
+create_list_movies -- Create the list of all the movies in the database
+manage_form -- Ensure that the form from the recommendation page is valid
+change_movie_number -- Manage the number of movies the Netlex' user wants to rate
+manage_notations - Manage the form for the recommendation page
+movie_list_to_string -- Transform a list of film titles into a readable format for sqlite
+final_page -- Display of the final page, before and after the submitting of the form
+tags_for_movie_list -- Return a list of tags corresponding to a list of movies
+table_of_tags_for_chosen_movies -- Manage the tags needed for the displayed table of the advice page
+advice -- Display of the advice page, before and after the submitting of the form
+home -- Display of the Home page
+contact -- Display of the Contact page
+sources -- Display of the Sources page
 """
 
 import sqlite3
@@ -11,7 +25,11 @@ from .forms import MoviesRatings, ChoiceMovieNumber, MovieChoice
 
 
 def create_list_movies() -> list:
-    """ Création de la liste de movies proposés à partir de la base de données """
+    """Create the list of all the movies of the database
+    
+    Returns:
+    list_movies (list): List of all the movies of the database
+    """
     link = sqlite3.connect("base_noms_film.db")
     cursor = link.cursor()
     cursor.execute("SELECT DISTINCT title FROM noms_film")
