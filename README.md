@@ -1,15 +1,15 @@
 # NetfleX
 
-## Auteurs: 
+## Auteurs
 Maxime BARAKAT, Romain BERTRAND, Thomas GERBEAUD
-## Date: 
+## Date
 Novembre 2019 à Janvier 2020
 
 
-## Projet de TDLog:
+## Projet de TDLog
 Algorithme de recommandation de films, site web
 
-## Etat du projet:
+## Etat du projet
 
 Recommandation de films utilisant la base de données ml-latest-small téléchargeable ici:
 https://grouplens.org/datasets/movielens/latest/
@@ -23,7 +23,7 @@ Algorithmes utilisés:
 - Dans le second cas, sélectionne les utilisateurs du même avis que vous sur votre film, et renvoie des films qu'ils ont apprécié.
 
 
-## Mise en place : 
+## Mise en place
 Nécessite uniquement Python 3 et le framework Django, version > 1.
 
 ## Lancement
@@ -46,7 +46,3 @@ OU:
 Puis:
 
 3. Se rendre à l'adresse http://localhost:8000/NetfleX/
-
-
-## Remerciements
-?
