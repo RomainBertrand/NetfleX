@@ -24,17 +24,20 @@ Algorithmes utilisés:
 
 
 ## Mise en place : 
-Nécessite uniquement Python 3 et le Django, version > 1.
+Nécessite uniquement Python 3 et le framework Django, version > 1.
 
 ## Lancement
 Après téléchargement du projet, pour le lancer:
-1- Se placer dans le répertoire contenant le main.py
-2- L'exécuter: '''python main.py'''
-OU:
-1bis- Se placer dans le répertoire contenant le fichier manage.py ( NetfleX/interface_recommandation )
-2bis- Utiliser la commande '''python manage.py runserver'''
 
-3- Se rendre à l'adresse http://localhost:8000/NetfleX/
+1. Se placer dans le répertoire contenant le main.py
+2. L'exécuter: 
+    python main.py
+OU:
+1. Se placer dans le répertoire contenant le fichier manage.py ( NetfleX/interface_recommandation )
+2. Utiliser la commande 
+    python manage.py runserver
+
+3. Se rendre à l'adresse http://localhost:8000/NetfleX/
 
 
 ## Remerciements
