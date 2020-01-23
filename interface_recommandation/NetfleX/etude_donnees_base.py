@@ -38,20 +38,20 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
     # users_ratings: list of tuples. Each tuple contain a movie_id followed by the ids of users
     # that have seen this movie and their rating
     users_rating = []
-    # users ayant un movie en commun avec l'user
+    # users with at least on movie in common with the user
     for movie in list_movies:
         users_rating.append(dictionnary_movies_ratings[str(movie)])
 
     users_linked = []
-    # on génère une liste avec uniquement les users qui ont vu un des movies
+    # list with only the users who have a movie in common
     for user_rating in users_rating:
         for j in range(int(len(user_rating)/2)):
             if user_rating[2*j] not in users_linked:
                 users_linked.append(user_rating[2*j])
-    # on associe à chaque user une corrélation
+    # we associate a correlation to each user
     score_correlation = [0 for i in range(len(users_linked))]
-    for i in range(len(list_movies)):  # pour chaque movie
-        # pour chaque user qui l'a vu
+    for i in range(len(list_movies)):  # for every movie
+        # for every user who saw it
         for j in range(int(len(users_rating[i])/2)):
             if with_ratings:
                 gap = abs(user[i][1]-users_rating[i][2*j+1])
@@ -59,23 +59,23 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
                     (1+math.log(total_views_number /
                                 dictionnary_views_number[i]))
             else:
-                if user[i][1] == users_rating[i][2*j+1]:  # si ils ont le même rating
+                if user[i][1] == users_rating[i][2*j+1]:  # if they have the same rating
                     score_correlation[j] += 1
                 else:
                     score_correlation[j] -= 1
-    # l'user avec la meilleure corrélation
+    # user with the best correlation
     user_opti = users_linked[score_correlation.index(
         max(score_correlation))]
-    # movies vus par l'user le plus corrélé
+    # movies saw by the best correlated user
     possible_movies = dictionnary_users_ratings[user_opti]
-    # liste des movies ayant eu la rating maximale chez l'user optimal
+    # list of movies whot got the best grade from the most correlated user
     movies_to_recommend = []
-    # un indice sur deux est un movie, l'autre est un rating
+    # one on two indew is a movie, the other is a rating
     for ind_movie in range(int(len(possible_movies)/2)):
-        # on vérifie que l'user optimal a aimé le movie
+        # we check whether the user liked the movie
         if possible_movies[2*ind_movie+1]:
             if int(possible_movies[2*ind_movie]) not in list_movies:
-                # au vu du nombre d'rating de chaque user (>30), on aura un movie en commun
+                # seen the number of rating for every user (>30), a least be 1 movie is possible
                 movies_to_recommend.append(int(possible_movies[2*ind_movie]))
     return movies_to_recommend[random.randint(0, len(movies_to_recommend))]
 
