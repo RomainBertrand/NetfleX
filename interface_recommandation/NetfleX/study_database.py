@@ -2,7 +2,7 @@
 """Definition of the two main functions for movie recommendation and advice
 
 Functions:
-meilleure_correlation -- Correlate the user of NetfleX with someone in the database.
+best_correlation -- Correlate the user of NetfleX with someone in the database.
 For movie recommendation.
 advice_movie -- Return movies liked by users that agree with NetfleX' user on the chosen film.
 """
@@ -12,7 +12,7 @@ import random
 from NetfleX.lecture_csv import init_data, init_tags_movies
 
 
-def meilleure_correlation(user, with_ratings: bool = False) -> int:
+def best_correlation(user, with_ratings: bool = False) -> int:
     """Return the id of a movie that may be liked by NetfleX' user
 
     Look for the most correlate user to NetfleX' user and return a movie he likes.

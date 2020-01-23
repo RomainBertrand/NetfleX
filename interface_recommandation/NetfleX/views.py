@@ -19,7 +19,7 @@ sources -- Display of the Sources page
 import sqlite3
 from django.shortcuts import render
 from django.forms import formset_factory
-from NetfleX.etude_donnees_base import meilleure_correlation, advice_movie
+from NetfleX.study_database import best_correlation, advice_movie
 from NetfleX.lecture_csv import init_tags_movies
 from .forms import MoviesRatings, ChoiceMovieNumber, MovieChoice
 
@@ -81,7 +81,7 @@ def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, lis
 
 
 def change_movie_number(request):  # ->HttpResponse
-    """ Changement du nombre de films à noter pour la recommandation
+    """Change the number of movies the user will pick for the recommendation
 
     Parameters:
     request ():
@@ -100,7 +100,7 @@ def change_movie_number(request):  # ->HttpResponse
 
 
 def manage_notations(request):  # ->HttpResponse
-    """Handle the from of movies and ratings
+    """Handle the form of movies and ratings
 
     Parameters:
     request ():
@@ -184,7 +184,7 @@ def final_page(request):  # ->HttpResponse
                 [int(list_movie_id[i][0]), movies_chosen[i][1]])
         recommended_movie = [1]
         # Meilleure corrélation en fonction des movies et des ratings de l'user
-        recommended_movie.append(str(meilleure_correlation(user)))
+        recommended_movie.append(str(best_correlation(user)))
         cursor.execute("SELECT title FROM noms_film WHERE movieId IN {}".format(
             str(tuple(recommended_movie))))  # on récupère son title
         recommended_title = cursor.fetchall()[0][0]
@@ -305,15 +305,15 @@ def advice(request):  # ->HttpResponse
 
 
 def home(request):  # ->HttpResponse
-    """Page d'accueil"""
+    """Home Page"""
     return render(request, "NetfleX/home.html", locals())
 
 
 def contact(request):  # ->HttpResponse
-    """Page Contact"""
+    """Contact Page"""
     return render(request, "NetfleX/contact.html", locals())
 
 
 def sources(request):  # ->HttpResponse
-    """Page Sources"""
+    """Sources Page"""
     return render(request, "NetfleX/source.html", locals())
