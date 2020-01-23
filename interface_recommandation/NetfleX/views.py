@@ -42,12 +42,17 @@ def create_list_movies() -> list:
 
 
 def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, list, formset_factory, str):
-    """Ensures the form is valid. Otherwise, returns a blanck form. Then calls the form page.
-    
+    """Ensure the form is valid. Otherwise, return a blanck form. Then call the form page.
+
+    Parameters:
+    request (HttpResponse):
+    movie_number (int): number of movies in the form
+    from_final_page (bool): whether the function is called from the final page or not
+
     Returns:
     formset_is_valid (bool): Whether the formset is valid or not
     movies_chosen (list): list of the distinct movies selected (empty if no movies were chosen)
-    formset (formset_factory): the formset filled by the user (an empty one if no formset were filled)
+    formset (formset_factory): the formset filled by the user (empty if no formset were filled)
     same_choice_message (str or None): A string if the same movie was picked more than once
     """
     # On créé une formSet factory issue de la classe MoviesRatings
@@ -76,8 +81,11 @@ def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, lis
 
 
 def change_movie_number(request):  # ->HttpResponse
-    """ Changement du nombre de films à noter pour la recommandation 
-    
+    """ Changement du nombre de films à noter pour la recommandation
+
+    Parameters:
+    request ():
+
     Returns:
     render (HttpResponse): an html page which enables the user to change the number of movies
     """
@@ -92,10 +100,13 @@ def change_movie_number(request):  # ->HttpResponse
 
 
 def manage_notations(request):  # ->HttpResponse
-    """ Gère le formulaire de demande de movies et de ratings 
-    
+    """Handle the from of movies and ratings
+
+    Parameters:
+    request ():
+
     Returns:
-    render (HttpResponse): an html page (either the final page if the form is correct, or the form page otherwise
+    render (HttpResponse): an html page; final page if the form is correct, form page otherwise
     """
     list_movies = create_list_movies()
     movie_number = 5
@@ -111,8 +122,11 @@ def manage_notations(request):  # ->HttpResponse
 
 
 def movie_list_to_string(movies_chosen) -> (str, bool):
-    """ Change list of movies in a readable string for sqlite 
-    
+    """Change list of movies in a readable string for sqlite
+
+    Parameters:
+    movies_chosen (list): list of movies chosen by the user when he fills the form
+
     Returns:
     list_titles (list): list of strings which contain the movie names
     empty_formset (bool): whether the form is empty or not
@@ -143,10 +157,13 @@ def movie_list_to_string(movies_chosen) -> (str, bool):
 
 
 def final_page(request):  # ->HttpResponse
-    """ Appelle la fonction de matching et affiche le résultat 
+    """Call the matching function and wait for the response
+
+    Parameters:
+    request ():
 
     Returns:
-    render (HttpResponse): if the form is valid, prints out the movie recommended. Otherwise, shows the form page.
+    render (HttpResponse): if form is valid, shows the movie recommended. Otherwise, the form page.
     """
     # Choix du nombre de movies à ratingr
     movie_number = 5
@@ -176,10 +193,13 @@ def final_page(request):  # ->HttpResponse
 
 
 def tags_for_movie_list(list_movie_ids: list) -> dict:
-    """ Return a list of tags corresponding to movies of list_movie_ids 
+    """Return a list of tags corresponding to movies of list_movie_ids
+
+    Parameters:
+    list_movie_ids (list): list of id of movies for which we need the tag
 
     Returns:
-    tags_movies_chosen (dictionnary): Keys: id of movies (int), values: tags of this movie (lsit of string)
+    tags_movies_chosen (dictionnary): Keys: movie_id (int), values: movie_tags (list of string)
     """
     dictionnary_tags_movies, _ = init_tags_movies()
 
@@ -193,11 +213,17 @@ def tags_for_movie_list(list_movie_ids: list) -> dict:
     return tags_movies_chosen
 
 
-def table_of_tags_for_chosen_movies(tags_movies_chosen: dict, number_possible_movies: list, possible_movies: list) -> (list, list):
+def table_of_tags_for_chosen_movies(tags_movies_chosen: dict, id_possible_movies: list, possible_movies: list) -> (list, list):
     """A table of tags for a given movie
+
+    Parameters:
+    tags_movies_chosen (dict): for each movie, a list of its tags
+    id_possible_movies (list): list of the id of the movies we will recommend
+    possible_movies (list): list of movies we will recommend to the user
+
     Returns:
     tags_list (set): list of all the tags for the movie
-    tags_table (list): two-dimensions list : tags_table[i][j] == True if the movie i is linked to the tag j
+    tags_table (list): two-dim list: tags_table[i][j] == True if movie i and tag j are linked
     """
     # List of useful tags
     tags_list = set()
@@ -209,7 +235,7 @@ def table_of_tags_for_chosen_movies(tags_movies_chosen: dict, number_possible_mo
     movie_with_tag = []
     # tags_table[i][j] == True if the tag j is linked to the movie i
     tags_table = []
-    for ind, num_movie in enumerate(number_possible_movies):
+    for ind, num_movie in enumerate(id_possible_movies):
         movie_with_tag.append(
             [possible_movies[ind], tags_movies_chosen[str(num_movie)]])
         table_current_movie = [possible_movies[ind]]
@@ -224,7 +250,9 @@ def table_of_tags_for_chosen_movies(tags_movies_chosen: dict, number_possible_mo
 
 
 def advice(request):  # ->HttpResponse
-    """ Give a list of movies you may like based on the rating of one movie 
+    """Give a list of movies you may like based on the rating of one movie
+
+    Parameters:
 
     Returns:
     render (HttpResponse): enables the user to see movies liked by people with the same taste as his
@@ -251,11 +279,11 @@ def advice(request):  # ->HttpResponse
             movie_number = loves_or_hates.cleaned_data.get('movie_number')
             movie_tag = loves_or_hates.cleaned_data.get('movie_tag')
             # Ids of movies
-            number_possible_movies = advice_movie(
+            id_possible_movies = advice_movie(
                 id_title, likes, movie_tag, movie_number)
             possible_movies = []
 
-            for movie in number_possible_movies:
+            for movie in id_possible_movies:
                 movie = [str(movie), str(movie)]
                 cursor.execute("SELECT DISTINCT title FROM noms_film WHERE movieId IN {}".format(
                     str(tuple(movie))))  # on récupère son title
@@ -263,10 +291,10 @@ def advice(request):  # ->HttpResponse
 
             if possible_movies:
                 tags_movies_chosen = tags_for_movie_list(
-                    number_possible_movies)
+                    id_possible_movies)
 
                 tags_list, tags_table = table_of_tags_for_chosen_movies(
-                    tags_movies_chosen, number_possible_movies, possible_movies)
+                    tags_movies_chosen, id_possible_movies, possible_movies)
             else:
                 no_possible_movies = True
 
@@ -277,15 +305,15 @@ def advice(request):  # ->HttpResponse
 
 
 def home(request):  # ->HttpResponse
-    """ Page d'accueil """
+    """Page d'accueil"""
     return render(request, "NetfleX/home.html", locals())
 
 
 def contact(request):  # ->HttpResponse
-    """ Page Contact """
+    """Page Contact"""
     return render(request, "NetfleX/contact.html", locals())
 
 
 def sources(request):  # ->HttpResponse
-    """ Page Sources """
+    """Page Sources"""
     return render(request, "NetfleX/source.html", locals())

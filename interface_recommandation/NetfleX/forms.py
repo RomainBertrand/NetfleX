@@ -14,8 +14,9 @@ create_list_movies -- list of all the movies that are in the database
 import sqlite3
 from django import forms
 
-LIST_OF_ALL_TAGS = ["Documentary", "Drama", "Adventure", "Fantasy", "War", "Crime", "Children", "Romance", "Comedy",
-                    "Western", "Horror", "Thriller", "Film-Noir", "Sci-Fi", "Action", "IMAX", "Musical", "Animation", "Mystery", "No"]
+LIST_OF_ALL_TAGS = ["Documentary", "Drama", "Adventure", "Fantasy", "War", "Crime", "Children",
+                    "Romance", "Comedy", "Western", "Horror", "Thriller", "Film-Noir", "Sci-Fi",
+                    "Action", "IMAX", "Musical", "Animation", "Mystery", "No"]
 
 
 def create_list_movies() -> list:
@@ -68,7 +69,8 @@ class ChoiceMovieNumber(forms.Form):
     """A form for choosing the number of MoviesRatings forms NetfleX' user wants to fill
 
     Attributes:
-    movie_number (forms.IntegerField): The number of films that will be used for the recommendation. (max_value: 10, min_value: 1, default: 5) Required
+    movie_number (forms.IntegerField): The number of films that will be used for the recommendation.
+    (max_value: 10, min_value: 1, default: 5) Required
     """
     movie_number = forms.IntegerField(max_value=10, min_value=1, initial=5)
 
@@ -78,10 +80,12 @@ class MovieChoice(forms.Form):
 
     Attributes:
     title (forms.CharField): Title of the chosen film. Required
-    movie_advice_likes (forms.BooleanField): True if NetfeX' user likes the chosen film. Not required
-    movie_advice_hates (forms.BooleanField): True if NetfeX' user hates the chosen film. Not required
-    movie_number (forms.IntegerField): Number of movies displayed as advice. (max_value: 10, min_value: 1, default: 5) Required
-    movie_tag (forms.ChoiceField): Tag of the movies NetfleX' user would like to see. (choices: LIST_OF_ALL_TAGS, default: "No") Not required
+    movie_advice_likes (forms.BooleanField): True if NetfeX user likes the chosen film. Not required
+    movie_advice_hates (forms.BooleanField): True if NetfeX user hates the chosen film. Not required
+    movie_number (forms.IntegerField): Number of movies displayed as advice.
+    (max_value: 10, min_value: 1, default: 5) Required
+    movie_tag (forms.ChoiceField): Tag of the movies NetfleX' user would like to see.
+    (choices: LIST_OF_ALL_TAGS, default: "No") Not required
 
     Methods:
     clean -- Rules for the form validation.

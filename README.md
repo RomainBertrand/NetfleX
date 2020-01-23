@@ -1,48 +1,45 @@
 # NetfleX
-
-## Auteurs
+## Presentation
+### Authors
 Maxime BARAKAT, Romain BERTRAND, Thomas GERBEAUD
-## Date
-Novembre 2019 à Janvier 2020
+### Date
+November 2019 to January 2020
 
+### TDLog project
+Algorithm to recommend movies, with a web interface
 
-## Projet de TDLog
-Algorithme de recommandation de films, site web
-
-## Etat du projet
-
-Recommandation de films utilisant la base de données ml-latest-small téléchargeable ici:
+### State of the project
+Movie recommendation dataset ml-latest-small downloadable here:
 https://grouplens.org/datasets/movielens/latest/
 
-Sont actuellement disponibles deux services de recommandations:
-- Un premier où l'utilisateur choisit entre 1 et 10 films, les note entre 1 et 5 et se voit proposé le film le plus adapté pour lui. (Onglet "Recommandation" du site)
-- Un second où l'utilisateur choisit un film, indique s'il l'a aimé ou pas, et décide combien de films il veut se voir proposer (et éventuellement de quel genre). Il obtient alors une liste de films et les genres associés. (Onglet "Conseil" du site)
+Right now, two main features are available :
+- The first one enables the user to choose 1 to 10 movies, and grade them between 1 and 5, and then the algorithm recommends the movie he is most likely to like
+- The second one lets the user choose a movie, and give his opinion on the movie (whether he likes it or not), decides a number of movies he wants, and is able to pick a movie genre (but it's not mandatory). He then gets a movie list and there associated genres.
 
-Algorithmes utilisés:
-- Dans le premier cas, sélectionne l'utilisateur le plus corrélé avec vous et renvoie un film qu'il a aimé
-- Dans le second cas, sélectionne les utilisateurs du même avis que vous sur votre film, et renvoie des films qu'ils ont apprécié.
+Algorithms used:
+- In the first case, we pick the most coreelated user and return a movie he liked
+- In the second case, we pick the users with the same opinion on the movies as the user, and return movies they liked.
 
+## Installation
 
-## Mise en place
-Nécessite uniquement Python 3 et le framework Django, version > 1.
+### Dependencies
+To launch the service, Python 3 and Django >= 2 are required.
+	apt-get install python
+	pip install django
 
-## Lancement
-Après téléchargement du projet, pour le lancer:
+### Repository
+To clone, use 
+	git clone https://github.com/RomainBertrand/NetfleX
 
-1. Se placer dans le répertoire contenant main.py
-2. L'exécuter: 
+### Set up
+Go to the interface-recommendation directory
+	cd interface-recommendation/
 
+And launch the main.py file
+	./main.py
 
-    python main.py
+Alternatively, you can run the manage.py file with the option runserver
+	python manage.py runserver
 
-OU:
-
-1. Se placer dans le répertoire contenant le fichier manage.py ( NetfleX/interface_recommandation )
-2. Utiliser la commande 
-
-
-    python manage.py runserver
-
-Puis:
-
-3. Se rendre à l'adresse http://localhost:8000/NetfleX/
+### Use
+Open the web browser, and reach the address : http://localhost:8000/NetfleX

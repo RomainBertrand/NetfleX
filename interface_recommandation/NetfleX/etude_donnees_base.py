@@ -2,7 +2,8 @@
 """Definition of the two main functions for movie recommendation and advice
 
 Functions:
-meilleure_correlation -- Correlate the user of NetfleX with someone in the database. For movie recommendation.
+meilleure_correlation -- Correlate the user of NetfleX with someone in the database.
+For movie recommendation.
 advice_movie -- Return movies liked by users that agree with NetfleX' user on the chosen film.
 """
 
@@ -18,10 +19,12 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
 
     Parameters:
     user (list): list of tuples (id of a movie seen by the user, rating of this film)
-    with_ratings (bool): If False, ratings are booleans. Else, ratings are floats between 0 and 5. (default: False)
+    with_ratings (bool): If False, ratings are booleans. Else, ratings are floats between 0 and 5.
+    (default: False)
 
     Returns:
-    movies_to_recommend[random.randint(0, len(movies_to_recommend))] (int): id of a movie liked by the most correlate user to NetfleX' user
+    movies_to_recommend[random.randint(0, len(movies_to_recommend))] (int): id of a movie liked
+    by the most correlate user to NetfleX' user
     0 if no compatible movie
     """
 
@@ -32,13 +35,13 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
     list_movies = []
     for movie_rating in user:
         list_movies.append(movie_rating[0])
-    # users_ratings is a list of tuples. Each tuple contain the id of a movie followed by the ids of users
+    # users_ratings: list of tuples. Each tuple contain a movie_id followed by the ids of users
     # that have seen this movie and their rating
     users_rating = []
     # users ayant un movie en commun avec l'user
-    for movie in list_movies:  
+    for movie in list_movies:
         users_rating.append(dictionnary_movies_ratings[str(movie)])
-    
+
     users_linked = []
     # on génère une liste avec uniquement les users qui ont vu un des movies
     for user_rating in users_rating:
@@ -53,7 +56,8 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
             if with_ratings:
                 gap = abs(user[i][1]-users_rating[i][2*j+1])
                 score_correlation[j] += (5-gap) * \
-                    (1+math.log(total_views_number/dictionnary_views_number[i]))
+                    (1+math.log(total_views_number /
+                                dictionnary_views_number[i]))
             else:
                 if user[i][1] == users_rating[i][2*j+1]:  # si ils ont le même rating
                     score_correlation[j] += 1
@@ -78,13 +82,13 @@ def meilleure_correlation(user, with_ratings: bool = False) -> int:
 
 def advice_movie(movie: int, likes: bool, movie_tag: str, advice_number: int = 5) -> list:
     """Return a list of movies liked by users that agree with NetfleX' user on the chosen film.
-    
+
     Parameters:
     movie (int): id of the chosen movie
     likes (bool): True if movie is liked by NetfleX' user, else: False
     movie_tag (str): Tag of the films that NetfleX' user would like to see. movie_tag = "No" if no tag selected.
     advice_number (int): Number of movies that NetfleX' user would like to see, between 1 and 10 (default: 5)
-    
+
     Returns:
     final_movies (list): List of ids of movies liked by users that agree with NetfleX' user on the chosen film
     """
@@ -131,7 +135,8 @@ def advice_movie(movie: int, likes: bool, movie_tag: str, advice_number: int = 5
     final_movies = []
     acc = 0
     while acc < min(advice_number, len(possible_movies)):
-        potential_movie_id = possible_movies[random.randint(0, len(possible_movies) - 1)]
+        potential_movie_id = possible_movies[random.randint(
+            0, len(possible_movies) - 1)]
         if potential_movie_id not in final_movies:
             final_movies.append(potential_movie_id)
             acc += 1
