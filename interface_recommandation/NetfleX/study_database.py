@@ -27,7 +27,6 @@ def best_correlation(user, with_ratings: bool = False) -> int:
     by the most correlate user to NetfleX' user
     0 if no compatible movie
     """
-
     # Initialisation
     dictionnary_movies_ratings, dictionnary_users_ratings, dictionnary_views_number, total_views_number = init_data(
         with_ratings)
@@ -59,7 +58,8 @@ def best_correlation(user, with_ratings: bool = False) -> int:
                     (1+math.log(total_views_number /
                                 dictionnary_views_number[i]))
             else:
-                if user[i][1] == users_rating[i][2*j+1]:  # if they have the same rating
+                # if they have the same rating
+                if user[i][1] == users_rating[i][2*j+1]:
                     score_correlation[j] += 1
                 else:
                     score_correlation[j] -= 1
@@ -70,7 +70,7 @@ def best_correlation(user, with_ratings: bool = False) -> int:
     possible_movies = dictionnary_users_ratings[user_opti]
     # list of movies whot got the best grade from the most correlated user
     movies_to_recommend = []
-    # one on two indew is a movie, the other is a rating
+    # one on two index is a movie, the other is a rating
     for ind_movie in range(int(len(possible_movies)/2)):
         # we check whether the user liked the movie
         if possible_movies[2*ind_movie+1]:
@@ -86,11 +86,12 @@ def advice_movie(movie: int, likes: bool, movie_tag: str, advice_number: int = 5
     Parameters:
     movie (int): id of the chosen movie
     likes (bool): True if movie is liked by NetfleX' user, else: False
-    movie_tag (str): Tag of the films that NetfleX' user would like to see. movie_tag = "No" if no tag selected.
-    advice_number (int): Number of movies that NetfleX' user would like to see, between 1 and 10 (default: 5)
+    movie_tag (str): Tag of the films that NetfleX' user would like to see.
+    movie_tag = "No" if no tag selected.
+    advice_number (int): Number of movies NetfleX' user wants to see, between 1 and 10 (default: 5)
 
     Returns:
-    final_movies (list): List of ids of movies liked by users that agree with NetfleX' user on the chosen film
+    final_movies (list): Id of films liked by users that agree with NetfleX' user on the chosen film
     """
     # Initialisation
     with_ratings = True
@@ -122,12 +123,13 @@ def advice_movie(movie: int, likes: bool, movie_tag: str, advice_number: int = 5
         active_user = dictionnary_users_ratings[users_same_rating[users_count]]
         for ind_movie in range(int(len(active_user)/2)):
             if int(active_user[2 * ind_movie]) != movie:
-                # If a tag is selected, in order to be sure to have results, we are more tolerant on the rating
+                # To be sure to have results we are more tolerant on the rating if a tag is selected
                 if movie_tag == "No":
                     if float(active_user[2 * ind_movie + 1]) > 3.5:
                         possible_movies.append(int(active_user[2 * ind_movie]))
                 else:
-                    if float(active_user[2 * ind_movie + 1]) > 3 and movie_tag in dictionnary_tags_movies[active_user[2 * ind_movie]]:
+                    tag_ok = bool(movie_tag in dictionnary_tags_movies[active_user[2 * ind_movie]])
+                    if float(active_user[2 * ind_movie + 1]) > 3 and tag_ok:
                         possible_movies.append(int(active_user[2 * ind_movie]))
         users_count += 1
 

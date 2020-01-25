@@ -1,21 +1,21 @@
-""" Création des bases de données """
+"""Databases creation
+
+Functions:
+csv_en_bdd -- Parsing of our .csv files to create .db files
+"""
 
 import csv
 import sqlite3
 
 
 def csv_en_bdd():
-    """
-        Transforme les fichiers ratings.csv et movies.csv en base de données
-        Cree directement les fichiers .db associes
-    """
-
+    """Transform the files ratings.csv and movies.csv into .db files"""
     lien_avis = sqlite3.connect("base_avis_film.db")
 
     curseur_avis = lien_avis.cursor()
 #    curseur_avis.execute("""DROP TABLE users""")
 
-    # Transformation du .csv en .db
+    # Transformation of the .csv into .db
     curseur_avis.execute(
         """CREATE TABLE IF NOT EXISTS avis(userId, movieId, rating); """)
     nom_fichier_avis = "ml-latest-small/ratings.csv"
@@ -35,13 +35,13 @@ def csv_en_bdd():
 
     lien_avis.close()
 
-    # fichier movies.csv
+    # For the movies.csv file:
     lien_noms = sqlite3.connect("base_noms_film.db")
 
     curseur_noms = lien_noms.cursor()
 #    curseur_avis.execute("""DROP TABLE users""")
 
-    # Transformation du .csv en .db
+    # Transformation of the .csv into .db
     curseur_noms.execute(
         """CREATE TABLE IF NOT EXISTS noms_film(movieId, title); """)
     nom_fichier_noms = "ml-latest-small/movies.csv"

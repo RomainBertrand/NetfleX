@@ -45,7 +45,7 @@ def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, lis
     """Ensure the form is valid. Otherwise, return a blanck form. Then call the form page.
 
     Parameters:
-    request (HttpResponse):
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
     movie_number (int): number of movies in the form
     from_final_page (bool): whether the function is called from the final page or not
 
@@ -55,7 +55,7 @@ def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, lis
     formset (formset_factory): the formset filled by the user (empty if no formset were filled)
     same_choice_message (str or None): A string if the same movie was picked more than once
     """
-    # On créé une formSet factory issue de la classe MoviesRatings
+    # Creation of a formSet factory from the class MoviesRatings
     notation_movie_formset = formset_factory(
         MoviesRatings, extra=movie_number, max_num=10)
     movies_chosen = []
@@ -68,7 +68,7 @@ def manage_form(request, movie_number: int, from_final_page: bool) -> (bool, lis
             for movie_form in formset:
                 title = movie_form.cleaned_data.get('title')
                 rating = movie_form.cleaned_data.get('rating')
-                # Si movie déjà choisi
+                # If movie is already chosen:
                 already_chosen = False
                 for elem in movies_chosen:
                     if elem[0] == title:
@@ -84,7 +84,7 @@ def change_movie_number(request):  # ->HttpResponse
     """Change the number of movies the user will pick for the recommendation
 
     Parameters:
-    request ():
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
 
     Returns:
     render (HttpResponse): an html page which enables the user to change the number of movies
@@ -103,7 +103,7 @@ def manage_notations(request):  # ->HttpResponse
     """Handle the form of movies and ratings
 
     Parameters:
-    request ():
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
 
     Returns:
     render (HttpResponse): an html page; final page if the form is correct, form page otherwise
@@ -121,8 +121,8 @@ def manage_notations(request):  # ->HttpResponse
     return render(request, "NetfleX/recommendation.html", locals())
 
 
-def movie_list_to_string(movies_chosen) -> (str, bool):
-    """Change list of movies in a readable string for sqlite
+def movie_list_to_string(movies_chosen: list) -> (str, bool):
+    """Change a list of movies in a readable string for sqlite3
 
     Parameters:
     movies_chosen (list): list of movies chosen by the user when he fills the form
@@ -134,13 +134,13 @@ def movie_list_to_string(movies_chosen) -> (str, bool):
     list_titles = []
     for movie in movies_chosen:
         list_titles.append(movie[0])
-    # S'il y a moins de 5 films rentrés par l'utilisateur :
+    # If there is less than 5 films chosen by NetfleX' user:
     list_titles = [elem for elem in list_titles if elem is not None]
-    # Si la liste est vide, on renvoie le formulaire
+    # If the list is empty, a blank form is displayed again
     if not list_titles:
         return [], True
-    # on récupère les Id des movies choisis par l'user
-    # Le tuple pose problème s'il n'y a qu'un film dans la liste
+    # We take the ids of the movies chosen by NetfleX' user
+    # A tuple of length 1 is problematic because it ends with a comma
     remove_comma = False
     if len(list_titles) == 1:
         remove_comma = True
@@ -160,12 +160,12 @@ def final_page(request):  # ->HttpResponse
     """Call the matching function and wait for the response
 
     Parameters:
-    request ():
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
 
     Returns:
     render (HttpResponse): if form is valid, shows the movie recommended. Otherwise, the form page.
     """
-    # Choix du nombre de movies à ratingr
+    # Choice of the number of movies to rate
     movie_number = 5
     formset_is_valid, movies_chosen, formset, same_choice_message = manage_form(
         request, movie_number, True)
@@ -183,10 +183,11 @@ def final_page(request):  # ->HttpResponse
             user.append(
                 [int(list_movie_id[i][0]), movies_chosen[i][1]])
         recommended_movie = [1]
-        # Meilleure corrélation en fonction des movies et des ratings de l'user
+        # Best correlation depending on what was chosen by NetfleX' user
         recommended_movie.append(str(best_correlation(user)))
+        # We ask for its title:
         cursor.execute("SELECT title FROM noms_film WHERE movieId IN {}".format(
-            str(tuple(recommended_movie))))  # on récupère son title
+            str(tuple(recommended_movie))))
         recommended_title = cursor.fetchall()[0][0]
         return render(request, "NetfleX/final_page.html", locals())
     return render(request, "NetfleX/recommendation.html", locals())
@@ -253,11 +254,11 @@ def advice(request):  # ->HttpResponse
     """Give a list of movies you may like based on the rating of one movie
 
     Parameters:
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
 
     Returns:
     render (HttpResponse): enables the user to see movies liked by people with the same taste as his
     """
-
     # In order to have access to the database
     list_movies = create_list_movies()
 
@@ -285,8 +286,9 @@ def advice(request):  # ->HttpResponse
 
             for movie in id_possible_movies:
                 movie = [str(movie), str(movie)]
+                # We ask for its title:
                 cursor.execute("SELECT DISTINCT title FROM noms_film WHERE movieId IN {}".format(
-                    str(tuple(movie))))  # on récupère son title
+                    str(tuple(movie))))
                 possible_movies.append(cursor.fetchall()[0][0])
 
             if possible_movies:
@@ -305,15 +307,36 @@ def advice(request):  # ->HttpResponse
 
 
 def home(request):  # ->HttpResponse
-    """Home Page"""
+    """Home Page
+
+    Parameters:
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
+
+    Returns:
+    render (HttpResponse): Shows the home page
+    """
     return render(request, "NetfleX/home.html", locals())
 
 
 def contact(request):  # ->HttpResponse
-    """Contact Page"""
+    """Contact Page
+
+    Parameters:
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
+
+    Returns:
+    render (HttpResponse): Shows the contact page
+    """
     return render(request, "NetfleX/contact.html", locals())
 
 
 def sources(request):  # ->HttpResponse
-    """Sources Page"""
+    """Sources Page
+
+    Parameters:
+    request (HttpRequest): a Django object that pass data from the HTML to the Python file
+
+    Returns:
+    render (HttpResponse): Shows the sources page
+    """
     return render(request, "NetfleX/source.html", locals())

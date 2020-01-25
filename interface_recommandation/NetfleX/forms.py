@@ -25,7 +25,6 @@ def create_list_movies() -> list:
     Returns:
     list_movies (list): List of all the movies of the database
     """
-
     link = sqlite3.connect("base_noms_film.db")
     cursor = link.cursor()
     cursor.execute("SELECT DISTINCT title FROM noms_film")
@@ -47,14 +46,12 @@ class MoviesRatings(forms.Form):
     Methods:
     clean -- Rules for the form validation.
     """
-
     title = forms.CharField(max_length=100, required=True, widget=forms.TextInput(
         attrs={'list': 'Films', 'class': 'form_movie'}))
     rating = forms.IntegerField(max_value=5, min_value=0, required=True)
 
     def clean(self):
         """Personalized rules of validation for the form: ensure that title is in the database"""
-
         cleaned_data = super().clean()
         title = cleaned_data.get('title')
 

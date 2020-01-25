@@ -20,12 +20,13 @@ def init_data(with_ratings: bool = False) -> (dict, dict, dict, int):
     (default: False)
 
     Returns:
-    dictionnary_movies_ratings (dict): Keys: id of movies (str), values: tuple (id_user_1, rating_1, id_user_2, rating_2, ...)
-    dictionnary_users_ratings (dict): Keys: id of users (int), values: tuple (id_movie_1, rating_1, id_movie_2, rating_2, ...)
+    dictionnary_movies_ratings (dict): Keys: id of movies (str),
+    values: tuple (id_user_1, rating_1, id_user_2, rating_2, ...)
+    dictionnary_users_ratings (dict): Keys: id of users (int),
+    values: tuple (id_movie_1, rating_1, id_movie_2, rating_2, ...)
     dictionnary_views_number (dict): Keys: movie_id (str), values: total views of this movie (int)
     total_view_count (int): Number of films watched by all the users of the database
     """
-
     dictionnary_movies_ratings = {}
     dictionnary_users_ratings = {}
 
@@ -86,7 +87,6 @@ def init_movies_names() -> (dict, dict):
 
     NB: Having both these dictionnaries is redondant but makes the code easier to follow later
     """
-
     dictionnary_names_movies = {}
     dictionnary_movies_names = {}
 
@@ -119,7 +119,6 @@ def init_tags_movies() -> (dict, set):
     list_of_all_tags (set): Set of all the tags (str) that appear in the database.
     No tag is: '(no genres listed)'
     """
-
     dictionnary_tags_movies = {}
     list_of_all_tags = set()
 

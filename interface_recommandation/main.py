@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""To run the server"""
+
 import manage
 
 import sys
